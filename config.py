@@ -1,0 +1,25 @@
+from requests_oauthlib import OAuth1
+import argparse
+import ConfigParser
+import os
+
+ap = argparse.ArgumentParser(description=__doc__,
+                             formatter_class=argparse.RawTextHelpFormatter)
+ap.add_argument('--config',
+                metavar='CONFIG',
+                default=os.path.join(os.path.dirname(os.path.abspath(__file__)), 'config.cfg'),
+                help='config file, containing keys and login info')
+args = ap.parse_args()
+
+def read_config(section_name, item_name):
+   config = ConfigParser.RawConfigParser()
+   config.read(args.config)
+   return config.get(section_name, item_name)
+
+# client_key, client_secret, resource_owner_key, resource_owner_secret = read_config()
+
+# def get_authentication():
+# 	return OAuth1(client_key,
+# 								client_secret=client_secret,
+# 								resource_owner_key=resource_owner_key,
+# 								resource_owner_secret=resource_owner_secret)
