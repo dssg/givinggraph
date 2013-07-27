@@ -11,15 +11,15 @@ ap.add_argument('--config',
                 help='config file, containing keys and login info')
 args = ap.parse_args()
 
+
 def read_config(section_name, item_name):
-   config = ConfigParser.RawConfigParser()
-   config.read(args.config)
-   return config.get(section_name, item_name)
+    config = ConfigParser.RawConfigParser()
+    config.read(args.config)
+    return config.get(section_name, item_name)
 
-# client_key, client_secret, resource_owner_key, resource_owner_secret = read_config()
 
-# def get_authentication():
-# 	return OAuth1(client_key,
-# 								client_secret=client_secret,
-# 								resource_owner_key=resource_owner_key,
-# 								resource_owner_secret=resource_owner_secret)
+def get_twitter_authentication():
+    return OAuth1(read_config('twitter', 'client_key'),
+                  client_secret=read_config('twitter', 'client_secret'),
+                  resource_owner_key=read_config('twitter', 'resource_owner_key'),
+                  resource_owner_secret=read_config('twitter', 'resource_owner_secret'))

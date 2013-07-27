@@ -1,5 +1,5 @@
 import requests
-from .. import config
+import causenet.config
 from collections import namedtuple
 
 Nonprofit = namedtuple('Nonprofit', 'ein name mission city state zip ntee_code guidestar_participation guidestar_url')
@@ -9,8 +9,8 @@ Nonprofit = namedtuple('Nonprofit', 'ein name mission city state zip ntee_code g
 def get_nonprofit(ein):
     url = 'https://data.guidestar.org/v1/search.json?q=ein:' + ein
 
-    user = config.read_config('guide_star', 'user')
-    password = config.read_config('guide_star', 'pass')
+    user = causenet.config.read_config('guide_star', 'user')
+    password = causenet.config.read_config('guide_star', 'pass')
     r = requests.get(url, auth=(user, password))
 
     if r.status_code == 200:
