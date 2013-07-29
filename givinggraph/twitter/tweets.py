@@ -1,5 +1,5 @@
 import time
-from causenet.twitter.common import twitter_get
+from givinggraph.twitter.common import twitter_get
 
 
 # takes a Twitter user id (a string) as input and returns all of that user's tweets, going back as far as the API will let you

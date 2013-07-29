@@ -1,5 +1,5 @@
 import time
-from causenet.twitter.common import twitter_get
+from givinggraph.twitter.common import twitter_get
 
 
 # takes a list of Twitter screen names as input, and returns a dictionary mapping screen names to IDs

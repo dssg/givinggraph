@@ -1,4 +1,4 @@
-import causenet.config
+import givinggraph.config
 import requests
 
 
@@ -11,8 +11,7 @@ def twitter_get(url, params):
         complete_url += key + '=' + str(params[key]) + '&'
     complete_url = complete_url.strip('&')
 
-    r = requests.get(complete_url, auth=causenet.config.get_twitter_authentication())
-
+    r = requests.get(complete_url, auth=givinggraph.config.get_twitter_authentication())
     if r.status_code == 200:
         return r
     else:
