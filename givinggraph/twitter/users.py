@@ -43,17 +43,17 @@ def get_followers(user_id):
     base_url = 'https://api.twitter.com/1.1/followers/ids.json'
     params = {'user_id': user_id, 'count': 5000}
     all_followers = []
-    SLEEP_BETWEEN_REQUESTS_SECONDS = 5
+    SLEEP_BETWEEN_REQUESTS_SECONDS = 60
     while True:
         response = twitter_get(base_url, params)
-        chunk_of_followers = response.json()
+        chunk_of_followers = response.json()['ids']
         if chunk_of_followers is None:
             return None  # something went wrong
-        elif chunk_of_followers['next_cursor'] == 0:
+        elif response.json()['next_cursor'] == 0:
             return all_followers
         else:
             all_followers.extend(chunk_of_followers)
-            params['cursor'] = chunk_of_followers['next_cursor']
+            params['cursor'] = response.json()['next_cursor_str']
 
             max_number_of_requests = int(response.headers['X-Rate-Limit-Limit'])
             requests_remaining = int(response.headers['X-Rate-Limit-Remaining'])
