@@ -37,3 +37,33 @@ def get_screen_name_to_id_map(screen_names):
                 print 'Sleeping until the reset window in ' + seconds_until_reset + ' seconds.'
                 time.sleep(seconds_until_reset)
     return screen_name_to_id_map
+
+
+def get_followers(user_id):
+    base_url = 'https://api.twitter.com/1.1/followers/ids.json'
+    params = {'user_id': user_id, 'count': 5000}
+    all_followers = []
+    SLEEP_BETWEEN_REQUESTS_SECONDS = 5
+    while True:
+        response = twitter_get(base_url, params)
+        chunk_of_followers = response.json()
+        if chunk_of_followers is None:
+            return None  # something went wrong
+        elif chunk_of_followers['next_cursor'] == 0:
+            return all_followers
+        else:
+            all_followers.extend(chunk_of_followers)
+            params['cursor'] = chunk_of_followers['next_cursor']
+
+            max_number_of_requests = int(response.headers['X-Rate-Limit-Limit'])
+            requests_remaining = int(response.headers['X-Rate-Limit-Remaining'])
+            print '{0} followers retrieved so far. {1} of {2} requests left.'.format(len(all_followers), requests_remaining, max_number_of_requests)
+
+            if requests_remaining > 0:
+                time.sleep(SLEEP_BETWEEN_REQUESTS_SECONDS)
+            else:
+                reset_time = int(response.headers['X-Rate-Limit-Reset'])
+                seconds_until_reset = reset_time - time.gmtime() + 120  # put in a two minute buffer
+
+                print 'Sleeping until the reset window in ' + seconds_until_reset + ' seconds.'
+                time.sleep(seconds_until_reset)

@@ -8,7 +8,7 @@ import requests
 def twitter_get(url, params):
     complete_url = url + '?'
     for key in params:
-        complete_url += key + '=' + params[key] + '&'
+        complete_url += key + '=' + str(params[key]) + '&'
     complete_url = complete_url.strip('&')
 
     r = requests.get(complete_url, auth=causenet.config.get_twitter_authentication())
