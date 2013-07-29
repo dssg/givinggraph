@@ -19,6 +19,8 @@ def get_article_parts(html):
 
 
 def get_company_mentions_in_text(text, company_name):
+    '''Finds mentions of a company in some text. Assumes company_name contains no puncutation (so
+        "Apple Inc" instead of "Apple, Inc."), but the company name in text can contain punctuation.'''
     if company_name not in excerpt_regex_cache:
         __populate_regex_caches__(company_name)
 
