@@ -16,9 +16,7 @@ def add_nonprofit_info_to_db(ein):
                                  None,
                                  nonprofit_gs.city,
                                  nonprofit_gs.state,
-                                 nonprofit_gs.zip_code,
-                                 nonprofit_gs.guidestar_participation,
-                                 nonprofit_gs.guidestar_url)
+                                 nonprofit_gs.zip_code)
         DBSession.add(nonprofit_db)
     else:
         nonprofit_db.name = nonprofit_gs.name
@@ -28,6 +26,4 @@ def add_nonprofit_info_to_db(ein):
         nonprofit_db.city = nonprofit_gs.mission
         nonprofit_db.state = nonprofit_gs.mission
         nonprofit_db.ZIP = nonprofit_gs.zip_code
-        nonprofit_db.guidestar_participation_level = nonprofit_gs.guidestar_participation
-        nonprofit_db.guidestar_url = nonprofit_gs.guidestar_url
     DBSession.commit()

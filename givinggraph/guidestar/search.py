@@ -2,7 +2,7 @@ import requests
 import givinggraph.config
 from collections import namedtuple
 
-Nonprofit = namedtuple('Nonprofit', 'ein name mission city state zip ntee_code guidestar_participation guidestar_url')
+Nonprofit = namedtuple('Nonprofit', 'ein name mission city state zip ntee_code')
 
 
 # returns Nonprofit namedtuple if the response is OK, returns None is the response is not OK
@@ -21,8 +21,6 @@ def get_nonprofit(ein):
         state = nonprofit_dict['state']
         zip_code = nonprofit_dict['zip']
         ntee_code = nonprofit_dict['nteecode']
-        guidestar_participation = nonprofit_dict['participation']
-        guidestar_url = ntee_code = nonprofit_dict['public_report']
-        return Nonprofit(ein, name, mission, city, state, zip_code, ntee_code, guidestar_participation, guidestar_url)
+        return Nonprofit(ein, name, mission, city, state, zip_code, ntee_code)
     else:
         return None
