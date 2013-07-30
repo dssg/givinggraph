@@ -11,3 +11,4 @@ def get_search_results(search_terms):
 
     soup = bs(requests.get(URL + urlencode(fields)).text)
     return  [re.sub('<[^>]+>', '', str(hit.find(attrs={'class': 'url'}))) for hit in soup.findAll(attrs={'class': 'res'})]
+
