@@ -15,7 +15,7 @@ def get_screen_name_to_id_map(screen_names):
         first_execution = False
         params = {'screen_name': '%2c'.join(screen_names[start:end])}  # %2c is the encoding for a comma
         start = end
-        end = min(end+100, len(screen_names))
+        end = min(end + 100, len(screen_names))
 
         SLEEP_BETWEEN_REQUESTS_SECONDS = 5
         response = twitter_get(base_url, params)
