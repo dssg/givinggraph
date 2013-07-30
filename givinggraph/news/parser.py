@@ -39,3 +39,66 @@ def __populate_regex_caches__(company_name):
 
 def __get_regexed_company_name_text__(company_name):
     return '\\b' + FIND_COMPANY_SUFFIX_REGEX.sub(',? \\1\\.?', re.escape(company_name)).strip() + '\\b'
+
+
+def contains_supportive_wording(text):
+    ''' Words found in news articles that relate companies to nonprofits:
+            partner
+            partnership
+            sponsor
+            joins
+            participating
+            gave
+            giving
+            gift
+            collaborated
+            donation
+            donate
+            donor
+            contribution
+            contributor
+            made possible by
+            provided by
+            provides
+            providing
+            teaming
+            joined
+            support
+            help
+            grant
+            award
+    '''
+
+    supportive_words = ['partner',
+                        'sponsor',
+                        'participat',
+                        'gave',
+                        'giving',
+                        'give',
+                        'gift',
+                        'collaborat',
+                        'donat',
+                        'donor',
+                        'contribut',
+                        'made possible by',
+                        'provid',
+                        'team',
+                        'joins',
+                        'joined',
+                        'joining',
+                        'support',
+                        'help',
+                        'grant',
+                        'award']
+    for word in supportive_words:
+        if word in text:
+            return True
+    return False
+
+
+def contains_opposing_wording(text):
+    opposing_words = ['critic']
+    for word in opposing_words:
+        if word in text:
+            return True
+    return False
