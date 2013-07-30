@@ -34,10 +34,8 @@ class Nonprofit(Base):
     city = Column(String)
     state = Column(String)
     ZIP = Column(String)
-    guidestar_participation_level = Column(String)
-    guidestar_url = Column(String)
 
-    def __init__(self, name, ein, ntee_code, mission_statement, description, twitter_id, twitter_name, city, state, ZIP, guidestar_participation_level, guidestar_url):
+    def __init__(self, name, ein, ntee_code, mission_statement, description, twitter_id, twitter_name, city, state, ZIP):
         self.name = name
         self.ein = ein
         self.ntee_code = ntee_code
@@ -48,5 +46,3 @@ class Nonprofit(Base):
         self.city = city
         self.state = state
         self.ZIP = ZIP
-        self.guidestar_participation_level = guidestar_participation_level
-        self.guidestar_url = guidestar_url
