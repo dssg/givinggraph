@@ -34,8 +34,6 @@ nosetests.xml
 .project
 .pydevproject
 
-# Configuration files
-*.cfg
 
 # Emacs
 *~

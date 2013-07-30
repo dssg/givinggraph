@@ -14,7 +14,8 @@ args = ap.parse_args()
 
 def read_config(section_name, item_name):
     config = ConfigParser.RawConfigParser()
-    config.read(args.config)
+    config.read(os.environ['GGRAPH_CFG'])
+    #config.read(args.config)
     return config.get(section_name, item_name)
 
 
