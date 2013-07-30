@@ -41,7 +41,9 @@ def update_nonprofit_twitter_name(nonprofits_id):
     DBSession.commit()
 
 
-def update_nonprofit_twitter_ids():
+def update_null_nonprofit_twitter_ids():
+    '''Finds nonprofits for which the Twitter name is not null, but the Twitter user ID is null,
+    and gives the Twitter user ID a value.'''
     query = DBSession.query(Nonprofit).filter(Nonprofit.twitter_id is None)
     nonprofits = query.all()
     screen_names = [nonprofit.twitter_name for nonprofit in nonprofits]
