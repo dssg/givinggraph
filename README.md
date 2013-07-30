@@ -11,7 +11,7 @@ givinggraph
 1. Make some changes
 2. `git add <files>`; `git commit`
 3. `git pull --rebase`
-4. <merge conflicts if needed>
+4. merge conflicts if needed
 5. Make sure tests pass: `python setup.py test`
 
 [Travis](https://travis-ci.org/dssg/givinggraph.png?branch=master) is used for continuous testing
