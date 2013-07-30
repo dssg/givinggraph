@@ -33,7 +33,7 @@ def add_nonprofit_info_to_db(ein):
 
 def update_nonprofit_twitter_name(nonprofits_id):
     nonprofit = DBSession.query(Nonprofit).get(nonprofits_id)
-    twitter_url = givinggraph.yahoo.search.get_top_search_result('twitter ' + nonprofit.name)
+    twitter_url = givinggraph.yahoo.search.get_search_results('twitter ' + nonprofit.name)[0]
     twitter_name = None
     if twitter_url[:11] == 'twitter.com':
         twitter_name = twitter_url[12:]
