@@ -36,3 +36,6 @@ nosetests.xml
 
 # Configuration files
 *.cfg
+
+# Emacs
+*~
