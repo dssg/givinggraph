@@ -1,4 +1,3 @@
-import os
 import re
 import requests
 from BeautifulSoup import BeautifulSoup as bs
