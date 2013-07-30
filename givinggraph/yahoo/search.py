@@ -15,11 +15,10 @@ def get_top_search_result(search_terms):
 
     results = soup.findAll(attrs={'class': 'res'})
 
-    handle = ''
+    first_url = ''
     if results:
-        first_url = results[0].find(attrs={'class': 'url'})  # we're just going to take the first as best. flawed, but what can you do.
-        if len(first_url.contents) > 2:
-            for entry in first_url.contents[2:]:
-                handle += entry.string
+        first_url_parts = results[0].find(attrs={'class': 'url'})  # we're just going to take the first as best. flawed, but what can you do.
+        for entry in first_url_parts.contents:
+            first_url += entry.string
 
-    return handle.encode('utf-8')
+    return first_url.encode('utf-8')
