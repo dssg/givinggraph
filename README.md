@@ -11,18 +11,19 @@ givinggraph
 1. Make some changes
 2. `git add <files>`; `git commit`
 3. `git pull --rebase`
-4. <merge conflicts if needed>
+4. merge conflicts if needed
 5. Make sure tests pass: `python setup.py test`
+6. `git push`
 
-[Travis](https://travis-ci.org/dssg/givinggraph.png?branch=master) is used for continuous testing
+[Travis](https://travis-ci.org/dssg/givinggraph) is used for continuous testing
 
 
 ## Configuration
-Various API and Database credentials are read from a configuration file. A sample file is provided: `sample.cfg`. You should:
+Various API and Database credentials are read from a configuration file. A sample file is provided: [`sample.cfg`](https://github.com/dssg/givinggraph/blob/master/sample.cfg). You should:
 
-1. copy sample.cfg to somewhere else (e.g., ~/.giving)
+1. copy sample.cfg to somewhere else (e.g., `~/.giving`)
 2. add your credentials
-3. set an environment GGRAPH_CFG to point to the file (e.g., `export GGRAPH_CFG ~/.giving`)
+3. set an environment GGRAPH_CFG to point to the file (e.g., `export GGRAPH_CFG=~/.giving`)
 
 
 ### Celery
