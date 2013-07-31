@@ -83,6 +83,7 @@ class News_Article(Base):
         self.headline = headline
         self.text = text
 
+
 class News_Article_Companies_Rel(Base):
     __tablename__ = 'news_article_companies'
     news_article_companies_rel_id = Column(Integer, primary_key=True)
