@@ -34,8 +34,6 @@ class Nonprofit(Base):
     state = Column(String)
     ZIP = Column(String)
 
-    news_articles = relationship('News_Article', backref=backref('nonprofits'))
-
     def __init__(self, name, ein, ntee_code, mission_statement, description, twitter_id, twitter_name, city, state, ZIP):
         self.name = name
         self.ein = ein
@@ -79,22 +77,18 @@ class News_Article(Base):
     headline = Column(String)
     text = Column(String)
 
-    nonprofit = relationship('Nonprofit', backref=backref('news_articles'))
-
     def __init__(self, nonprofits_id, url, headline, text):
         self.nonprofits_id = nonprofits_id
         self.url = url
         self.headline = headline
         self.text = text
-        
-# class News_Article_Company(Base):
-#     __tablename__ = 'news_article_companies'
-#     news_article_companies_id = Column(Integer, primary_key=True)
-#     news_articles_id = Column(Integer, ForeignKey('news_articles.news_articles_id'))
-#     companies_id = Column(Integer, ForeignKey('companies.companies_id'))
 
-#     news_article = relationship('News_Article', backref=backref('news_article_companies'))
+class News_Article_Companies_Rel(Base):
+    __tablename__ = 'news_article_companies'
+    news_article_companies_rel_id = Column(Integer, primary_key=True)
+    news_articles_id = Column(Integer, ForeignKey('news_articles.news_articles_id'))
+    companies_id = Column(Integer, ForeignKey('companies.companies_id'))
 
-#     def __init__(self, news_articles_id, companies_id):
-#         self.news_articles_id = news_articles_id
-#         self.companies_id = companies_id
+    def __init__(self, news_articles_id, companies_id):
+        self.news_articles_id = news_articles_id
+        self.companies_id = companies_id
