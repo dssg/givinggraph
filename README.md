@@ -14,7 +14,7 @@ givinggraph
 4. merge conflicts if needed
 5. Make sure tests pass: `python setup.py test`
 
-[Travis](https://travis-ci.org/dssg/givinggraph.png?branch=master) is used for continuous testing
+[Travis](https://travis-ci.org/dssg/givinggraph) is used for continuous testing
 
 
 ## Configuration
