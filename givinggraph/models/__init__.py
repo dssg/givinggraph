@@ -1,7 +1,7 @@
 from givinggraph import config
-from sqlalchemy import create_engine, Column, String, Integer
+from sqlalchemy import create_engine, Column, String, Integer, DateTime, ForeignKey
 from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy.orm import sessionmaker as sessionmakermaker
+from sqlalchemy.orm import sessionmaker as sessionmakermaker, relationship, backref
 
 host = config.read_config('database', 'host')
 db_name = config.read_config('database', 'database')
@@ -21,7 +21,6 @@ Base = declarative_base()
 
 
 class Nonprofit(Base):
-    # __table__ = Table('tweets', metadata, autoload=True)
     __tablename__ = 'nonprofits'
     nonprofits_id = Column(Integer, primary_key=True)
     name = Column(String)
@@ -35,6 +34,8 @@ class Nonprofit(Base):
     state = Column(String)
     ZIP = Column(String)
 
+    news_articles = relationship('News_Article', backref=backref('nonprofits'))
+
     def __init__(self, name, ein, ntee_code, mission_statement, description, twitter_id, twitter_name, city, state, ZIP):
         self.name = name
         self.ein = ein
@@ -46,3 +47,54 @@ class Nonprofit(Base):
         self.city = city
         self.state = state
         self.ZIP = ZIP
+
+
+class Company(Base):
+    __tablename__ = 'companies'
+    companies_id = Column(Integer, primary_key=True)
+    ticker = Column(String)
+    name = Column(String)
+    exchange = Column(String)
+    website = Column(String)
+    industry = Column(String)
+    sector = Column(String)
+    summary = Column(String)
+
+    def __init__(self, ticker, name, exchange, website, industry, sector, summary):
+        self.ticker = ticker
+        self.name = name
+        self.exchange = exchange
+        self.website = website
+        self.industry = industry
+        self.sector = sector
+        self.summary = summary
+
+
+class News_Article(Base):
+    __tablename__ = 'news_articles'
+    news_articles_id = Column(Integer, primary_key=True)
+    nonprofits_id = Column(Integer, ForeignKey('nonprofits.nonprofits_id'))
+    insert_time = Column(DateTime)
+    url = Column(String)
+    headline = Column(String)
+    text = Column(String)
+
+    nonprofit = relationship('Nonprofit', backref=backref('news_articles'))
+
+    def __init__(self, nonprofits_id, url, headline, text):
+        self.nonprofits_id = nonprofits_id
+        self.url = url
+        self.headline = headline
+        self.text = text
+        
+# class News_Article_Company(Base):
+#     __tablename__ = 'news_article_companies'
+#     news_article_companies_id = Column(Integer, primary_key=True)
+#     news_articles_id = Column(Integer, ForeignKey('news_articles.news_articles_id'))
+#     companies_id = Column(Integer, ForeignKey('companies.companies_id'))
+
+#     news_article = relationship('News_Article', backref=backref('news_article_companies'))
+
+#     def __init__(self, news_articles_id, companies_id):
+#         self.news_articles_id = news_articles_id
+#         self.companies_id = companies_id
