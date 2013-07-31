@@ -13,6 +13,7 @@ givinggraph
 3. `git pull --rebase`
 4. merge conflicts if needed
 5. Make sure tests pass: `python setup.py test`
+6. `git push`
 
 [Travis](https://travis-ci.org/dssg/givinggraph) is used for continuous testing
 
