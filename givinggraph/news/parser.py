@@ -15,7 +15,7 @@ def get_article_parts(html):
         article = g.extract(raw_html=html)
     except:
         return None, None
-    return article.title.strip().encode('utf-8'), article.title.strip().encode('utf-8')
+    return article.title.strip().encode('utf-8'), article.cleaned_text.strip().encode('utf-8')
 
 
 def get_company_mentions_in_text(text, company_name):
