@@ -9,7 +9,7 @@ def get_simlarity_scores_for_all_pairs(texts):
     similarity_matrix = __get_corpus_tfidf_similarity_matrix__(texts)
     # for every row in the matrix, find its similarity to every other row
     for i, vec in similarity_matrix:
-        similarity_result_matrix[i] = list(similarity_matrix[vec]) #  the [vec] notation returns a vector where each element is the cosine similarity value
+        similarity_result_matrix[i] = list(similarity_matrix[vec])  # the [vec] notation returns a vector where each element is the cosine similarity value
     return similarity_result_matrix
 
 
@@ -18,7 +18,7 @@ def __get_corpus_tfidf_similarity_matrix__(texts):
     # gensim has us convert tokens to IDs using corpora.Dictionary
     dictionary = corpora.Dictionary([text.lower().split() for text in texts])
     corpus = [dictionary.doc2bow(text) for text in texts]
-    corpus_tfidf = models.TfidfModel(corpus, normalize=True)[texts] #  Feed texts back into its own model to get the TF-IDF values for the texts
+    corpus_tfidf = models.TfidfModel(corpus, normalize=True)[texts]  # Feed texts back into its own model to get the TF-IDF values for the texts
     return similarities.SparseMatrixSimilarity(corpus_tfidf)
 
 # def add_tfidf_to(texts):
