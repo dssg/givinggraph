@@ -56,9 +56,10 @@ def update_null_nonprofit_twitter_ids():
 
 
 def add_news_articles_to_db_for_nonprofit(nonprofit, companies):
-    print 'Getting and processing news articles...'
-    # TODO: figure out which URLs to ignore and pass them to find_news_articles
-    for article in news_searcher.find_news_articles(nonprofit.name):
+    print 'Getting and processing news articles for nonprofit with ID {0}...'.format(nonprofit.nonprofits_id)
+    query = DBSession.query(News_Article).filter(News_Article.nonprofits_id == nonprofit.nonprofits_id)
+    already_retrieved_urls = [news_article.url for news_article in query.all()]
+    for article in news_searcher.find_news_articles(nonprofit.name, urls_to_ignore = already_retrieved_urls):
         news_article = News_Article(nonprofit.nonprofits_id, article.url, article.headline, article.body)
         DBSession.add(news_article)
         for company in companies:
