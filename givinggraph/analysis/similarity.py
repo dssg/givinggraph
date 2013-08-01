@@ -2,7 +2,7 @@ import numpy
 from gensim import corpora, models, similarities
 
 
-def get_simlarity_scores_for_all_pairs(texts):
+def get_similarity_scores_for_all_pairs(texts):
     '''Takes a list of texts as input and returns a matrix, where element (m,n) represents the cosine similarity of texts[m] and texts[n].'''
     n = len(texts)
     similarity_result_matrix = numpy.empty(shape=(n, n))
