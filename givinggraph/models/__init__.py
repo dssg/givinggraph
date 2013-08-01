@@ -85,7 +85,7 @@ class News_Article(Base):
 
 
 class News_Article_Companies_Rel(Base):
-    __tablename__ = 'news_article_companies_rel'
+    __tablename__ = 'news_articles_companies_rel'
     news_article_companies_rel_id = Column(Integer, primary_key=True)
     news_articles_id = Column(Integer, ForeignKey('news_articles.news_articles_id'))
     companies_id = Column(Integer, ForeignKey('companies.companies_id'))
