@@ -59,7 +59,7 @@ def add_news_articles_to_db_for_nonprofit(nonprofit, companies):
     print 'Getting and processing news articles...'
     # TODO: figure out which URLs to ignore and pass them to find_news_articles
     for article in news_searcher.find_news_articles(nonprofit.name):
-        news_article = News_Article(article.url, article.headline, article.body, nonprofit = nonprofit)
+        news_article = News_Article(nonprofit.nonprofits_id, article.url, article.headline, article.body)
         DBSession.add(news_article)
         for company in companies:
             for mention in news_parser.get_company_mentions_in_text(article.body, company.name.encode('utf-8')):
