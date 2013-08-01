@@ -2,7 +2,7 @@ GivingGraph
 ========
 A tool to help understand the relationships between non-profits, for-profits, and the causes they support.
 
-GivingGraph is a project of the 2013 [Data Science for Social Good](http://dssg.io) fellowship, in partnership with the [Case Foundation](http://casefoundation.org). The Giving Graph [concept](http://casefoundation.org/blog/how-new-type-social-graph-could-change-philanthropy) was introduced by the Case Foundation in early 2013.
+GivingGraph is a project of the 2013 [Data Science for Social Good](http://dssg.io) fellowship, in partnership with the [Case Foundation](http://casefoundation.org). The Giving Graph concept [was introduced by the Case Foundation](http://casefoundation.org/blog/how-new-type-social-graph-could-change-philanthropy) in early 2013.
 
 
 ## Motivation
@@ -67,7 +67,7 @@ To get started:
     cd givinggraph
     python setup.py develop
 
-### Workflow
+## Workflow
 1. Make some changes
 2. `git add <files>`; `git commit`
 3. `git pull --rebase`
@@ -94,3 +94,5 @@ celery -A givinggraph.tasks worker --loglevel=INFO
 python -m givinggraph.tasks
 ```
 
+## License
+TBD
