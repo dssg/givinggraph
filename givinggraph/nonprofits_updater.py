@@ -3,7 +3,7 @@ import givinggraph.news.searcher as news_searcher
 import givinggraph.news.parser as news_parser
 import givinggraph.twitter.users
 import givinggraph.yahoo.search
-from givinggraph.models import DBSession, Nonprofit, Company, News_Article, News_Article_Companies_Rel
+from givinggraph.models import DBSession, Nonprofit, Company, News_Article
 
 
 def add_nonprofit_info_to_db(ein):
@@ -59,12 +59,12 @@ def add_news_articles_to_db_for_nonprofit(nonprofit, companies):
     print 'Getting and processing news articles...'
     # TODO: figure out which URLs to ignore and pass them to find_news_articles
     for article in news_searcher.find_news_articles(nonprofit.name):
-        news_article = News_Article(nonprofit.nonprofits_id, article.url, article.headline, article.body)
+        news_article = News_Article(article.url, article.headline, article.body, nonprofit = nonprofit)
         DBSession.add(news_article)
         for company in companies:
             for mention in news_parser.get_company_mentions_in_text(article.body, company.name.encode('utf-8')):
                 if news_parser.contains_supportive_wording(mention):
-                    DBSession.add(News_Article_Companies_Rel(news_article.news_articles_id, company.companies_id))
+                    news_article.companies.add(company)
                     break
     DBSession.commit()
 

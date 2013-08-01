@@ -1,7 +1,7 @@
 from givinggraph import config
-from sqlalchemy import create_engine, Column, String, Integer, DateTime, ForeignKey
+from sqlalchemy import create_engine, Column, String, Integer, DateTime, ForeignKey, Table
 from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy.orm import sessionmaker as sessionmakermaker, relationship, backref
+from sqlalchemy.orm import sessionmaker as sessionmakermaker, relationship
 
 host = config.read_config('database', 'host')
 db_name = config.read_config('database', 'database')
@@ -34,6 +34,8 @@ class Nonprofit(Base):
     state = Column(String)
     ZIP = Column(String)
 
+    news_articles = relationship("News_Article", backref='nonprofits')
+
     def __init__(self, name, ein, ntee_code, mission_statement, description, twitter_id, twitter_name, city, state, ZIP):
         self.name = name
         self.ein = ein
@@ -45,6 +47,11 @@ class Nonprofit(Base):
         self.city = city
         self.state = state
         self.ZIP = ZIP
+
+
+news_article_companies_rel_table = Table('news_articles_companies_rel', Base.metadata,
+                                         Column('news_articles_id', Integer, ForeignKey('news_articles.news_articles_id')),
+                                         Column('companies_id', Integer, ForeignKey('companies.companies_id')))
 
 
 class Company(Base):
@@ -77,6 +84,8 @@ class News_Article(Base):
     headline = Column(String)
     text = Column(String)
 
+    companies = relationship('Company', secondary=news_article_companies_rel_table, backref='news_articles')
+
     def __init__(self, nonprofits_id, url, headline, text):
         self.nonprofits_id = nonprofits_id
         self.url = url
@@ -84,12 +93,12 @@ class News_Article(Base):
         self.text = text
 
 
-class News_Article_Companies_Rel(Base):
-    __tablename__ = 'news_articles_companies_rel'
-    news_article_companies_rel_id = Column(Integer, primary_key=True)
-    news_articles_id = Column(Integer, ForeignKey('news_articles.news_articles_id'))
-    companies_id = Column(Integer, ForeignKey('companies.companies_id'))
+# class News_Article_Companies_Rel(Base):
+#     __tablename__ = 'news_articles_companies_rel'
+#     news_article_companies_rel_id = Column(Integer, primary_key=True)
+#     news_articles_id = Column(Integer, ForeignKey('news_articles.news_articles_id'))
+#     companies_id = Column(Integer, ForeignKey('companies.companies_id'))
 
-    def __init__(self, news_articles_id, companies_id):
-        self.news_articles_id = news_articles_id
-        self.companies_id = companies_id
+#     def __init__(self, news_articles_id, companies_id):
+#         self.news_articles_id = news_articles_id
+#         self.companies_id = companies_id
