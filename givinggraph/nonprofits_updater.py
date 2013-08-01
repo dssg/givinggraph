@@ -64,7 +64,7 @@ def add_news_articles_to_db_for_nonprofit(nonprofit, companies):
         for company in companies:
             for mention in news_parser.get_company_mentions_in_text(article.body, company.name.encode('utf-8')):
                 if news_parser.contains_supportive_wording(mention):
-                    news_article.companies.add(company)
+                    news_article.companies.append(company)
                     break
     DBSession.commit()
 
