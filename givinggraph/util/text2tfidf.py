@@ -22,10 +22,8 @@ import operator
 import sys
 
 
-from sklearn.cluster import MiniBatchKMeans
 from sklearn.feature_extraction.text import TfidfTransformer
 from sklearn.feature_extraction.text import CountVectorizer
-from sklearn.pipeline import Pipeline
 
 
 def text2tfidf(data_generator):
