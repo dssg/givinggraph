@@ -49,7 +49,7 @@ def update_nonprofit_twitter_name(nonprofits_id):
 def update_null_nonprofit_twitter_ids():
     '''Finds nonprofits for which the Twitter name is not null, but the Twitter user ID is null,
     and gives the Twitter user ID a value.'''
-    query = DBSession.query(Nonprofit).filter(Nonprofit.twitter_id == None)
+    query = DBSession.query(Nonprofit).filter(Nonprofit.twitter_id == None)  # nopep8
     nonprofits = query.all()
     screen_names = [nonprofit.twitter_name for nonprofit in nonprofits]
     screen_name_to_id_map = givinggraph.twitter.users.get_screen_name_to_id_map(screen_names)
@@ -85,7 +85,7 @@ def add_news_articles_to_db_for_nonprofits():
 
 
 def add_similarity_scores_for_nonprofit_descriptions():
-    nonprofits = DBSession.query(Nonprofit).filter(Nonprofit.description != None).all()
+    nonprofits = DBSession.query(Nonprofit).filter(Nonprofit.description != None).all()  # nopep8
     similarity_matrix = similarity.get_similarity_scores_all_pairs([nonprofit.description for nonprofit in nonprofits])
     for m in xrange(len(similarity_matrix) - 1):
         for n in xrange(m + 1):
