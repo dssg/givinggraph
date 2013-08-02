@@ -88,6 +88,6 @@ def add_similarity_scores_for_nonprofit_descriptions():
     nonprofits = DBSession.query(Nonprofit).filter(Nonprofit.description != None).all()  # nopep8
     similarity_matrix = similarity.get_similarity_scores_all_pairs([nonprofit.description for nonprofit in nonprofits])
     for m in xrange(len(similarity_matrix) - 1):
-        for n in xrange(m + 1):
+        for n in xrange(m + 1, len(similarity_matrix)):
             DBSession.add(Nonprofits_Similarity_By_Description(nonprofits[m].nonprofits_id, nonprofits[n].nonprofits_id, similarity_matrix[m][n]))
     DBSession.commit()
