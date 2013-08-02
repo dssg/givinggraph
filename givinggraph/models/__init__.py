@@ -1,5 +1,5 @@
 from givinggraph import config
-from sqlalchemy import create_engine, Column, String, Integer, DateTime, ForeignKey, Table
+from sqlalchemy import create_engine, Column, String, Integer, Float, DateTime, ForeignKey, Table
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker as sessionmakermaker, relationship
 
@@ -93,12 +93,14 @@ class News_Article(Base):
         self.text = text
 
 
-# class News_Article_Companies_Rel(Base):
-#     __tablename__ = 'news_articles_companies_rel'
-#     news_article_companies_rel_id = Column(Integer, primary_key=True)
-#     news_articles_id = Column(Integer, ForeignKey('news_articles.news_articles_id'))
-#     companies_id = Column(Integer, ForeignKey('companies.companies_id'))
+class Nonprofits_Similarity_By_Description(Base):
+    __tablename__ = 'nonprofits_similarity_by_description2'
+    nonprofits_similarity_by_description_id = Column(Integer, primary_key=True)
+    charity1_id = Column(Integer, ForeignKey('nonprofits.nonprofits_id'))
+    charity2_id = Column(Integer, ForeignKey('nonprofits.nonprofits_id'))
+    similarity = Column(Float)
 
-#     def __init__(self, news_articles_id, companies_id):
-#         self.news_articles_id = news_articles_id
-#         self.companies_id = companies_id
+    def __init__(self, charity1_id, charity2_id, similarity):
+        self.charity1_id = charity1_id
+        self.charity2_id = charity2_id
+        self.similarity = similarity
