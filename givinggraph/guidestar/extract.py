@@ -32,9 +32,9 @@ def get_nonprofit(organization_id):
         fundraising_expenses = financials['fundraising_expenses']
         total_expenses = financials['total_expenses']
         funding_source = financials['funding_source']
-        financials = Financials(total_revenue, total_assets, program_expenses, admin_expenses, \
-            fundraising_expenses, total_expenses, funding_source)
-        
+        financials = Financials(total_revenue, total_assets, program_expenses, admin_expenses,
+                                fundraising_expenses, total_expenses, funding_source)
+
         # get employee info
         people_list = r.json()['people']
         people = []
