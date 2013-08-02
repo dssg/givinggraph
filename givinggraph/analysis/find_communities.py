@@ -4,8 +4,10 @@ import matplotlib.pyplot as plt
 
 #better with karate_graph() as defined in networkx example.
 #erdos renyi don't have true community structure
-G = nx.erdos_renyi_graph(30, 0.05)
-
+#G = nx.erdos_renyi_graph(30, 0.05)
+G=nx.Graph()
+G.add_edge('1234','12345')
+G.add_edge('1234','2')
 #first compute the best partition
 partition = community.best_partition(G)
 
