@@ -1,3 +1,4 @@
+import givinggraph.analysis.similarity as similarity
 import givinggraph.guidestar.search
 import givinggraph.news.searcher as news_searcher
 import givinggraph.news.parser as news_parser
@@ -59,7 +60,7 @@ def update_null_nonprofit_twitter_ids():
 
 def add_news_articles_to_db_for_nonprofit(nonprofit, companies):
     '''Takes a Nonprofit object and a list of Company objects as input. Searches the web for
-    news articles related to the nonprofit and stores them in the DB. And if any of the articles 
+    news articles related to the nonprofit and stores them in the DB. And if any of the articles
     contain a company name, a link is made in the DB between the article and the company.'''
     print 'Getting and processing news articles for nonprofit with ID {0}...'.format(nonprofit.nonprofits_id)
     query = DBSession.query(News_Article).filter(News_Article.nonprofits_id == nonprofit.nonprofits_id)
@@ -81,3 +82,10 @@ def add_news_articles_to_db_for_nonprofits():
     print 'Done loading companies.'
     for nonprofit in DBSession.query(Nonprofit).all():
         add_news_articles_to_db_for_nonprofit(nonprofit, companies)
+
+
+def calculate_similarity_scores_for_nonprofit_descriptions():
+    nonprofits = DBSession.query(Nonprofit).all()
+    print 'Calculating similarity...'
+    similarity_matrix = similarity.get_similarity_scores_all_pairs([nonprofit.description for nonprofit in nonprofits if nonprofit.description is not None])
+    return similarity_matrix

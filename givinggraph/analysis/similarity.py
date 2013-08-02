@@ -5,7 +5,7 @@ from gensim import corpora, models, similarities
 def get_similarity_scores_all_pairs(texts):
     '''Takes a list of strings as input and returns a matrix of cosine similarity values where element [m][n] represents the similarity between text m and text n.'''
     n = len(texts)
-    all_similarities = numpy.empty(shape=(n,n))
+    all_similarities = numpy.empty(shape=(n, n))
     corpora_dictionary = __get_corpora_dictionary__(texts)
     similarity_matrix = __get_tfidf_similarity_matrix__(corpora_dictionary, texts)
     for i, text in enumerate(texts):
