@@ -1,27 +1,15 @@
 import community
 import networkx as nx
-import matplotlib.pyplot as plt
 
-#better with karate_graph() as defined in networkx example.
-#erdos renyi don't have true community structure
-#G = nx.erdos_renyi_graph(30, 0.05)
-G=nx.Graph()
-G.add_edge('1234','12345')
-G.add_edge('1234','2')
-#first compute the best partition
-partition = community.best_partition(G)
-
-#drawing
-size = float(len(set(partition.values())))
-pos = nx.spring_layout(G)
-count = 0.
-for com in set(partition.values()) :
-    count = count + 1.
-    list_nodes = [nodes for nodes in partition.keys()
-                                if partition[nodes] == com]
-    nx.draw_networkx_nodes(G, pos, list_nodes, node_size = 20,
-                                node_color = str(count / size))
+edges_list = [("123", "345", 0.5), ("345", "456", 0.7),
+              ("345", "1", 0.1), ("1", "123", 0.3)]
 
 
-nx.draw_networkx_edges(G,pos, alpha=0.5)
-plt.show()
+def compute_communities(edges_list):
+    G = nx.Graph()
+    for edge in edges_list:
+        G.add_edge(edge[0], edge[1], weight=edge[2])
+    partition = community.best_partition(G)
+    return partition
+
+print compute_communities(edges_list)
