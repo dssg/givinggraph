@@ -3,7 +3,7 @@ from gensim import corpora, models, similarities
 
 
 def get_similarity_scores_all_pairs(texts):
-    '''Takes a list of strings as input and returns a matrix of cosine similarity values where element [m][n] represents the similarity between text m and text n.'''
+    """Takes a list of strings as input and returns a matrix of cosine similarity values where element [m][n] represents the similarity between text m and text n."""
     n = len(texts)
     all_similarities = numpy.empty(shape=(n, n))
     corpora_dictionary = __get_corpora_dictionary__(texts)
@@ -14,13 +14,13 @@ def get_similarity_scores_all_pairs(texts):
 
 
 def __get_similarity_scores__(corpora_dictionary, similarity_matrix, text):
-    '''Takes a similarity matrix and string as input and returns a list, where element i represents the cosine similarity of text and vector i in the similarity matrix.'''
+    """Takes a similarity matrix and string as input and returns a list, where element i represents the cosine similarity of text and vector i in the similarity matrix."""
     vec = corpora_dictionary.doc2bow(__tokenize_text__(text))
     return list(similarity_matrix[vec])
 
 
 def __get_tfidf_similarity_matrix__(corpora_dictionary, texts):
-    '''Takes a gensim.corpora.Dictionary object and list of strings as input. Returns a gensim.similarities.SparseMatrixSimilarity object for calculating cosine similarities.'''
+    """Takes a gensim.corpora.Dictionary object and list of strings as input. Returns a gensim.similarities.SparseMatrixSimilarity object for calculating cosine similarities."""
     texts_tokenized = [__tokenize_text__(text) for text in texts]
 
     # gensim has us convert tokens to numeric IDs using corpora.Dictionary
@@ -32,11 +32,12 @@ def __get_tfidf_similarity_matrix__(corpora_dictionary, texts):
 
 
 def __get_corpora_dictionary__(texts):
-    '''Takes a list of strings as input. Returns a gensim.corpora.Dictionary object.'''
+    """Takes a list of strings as input. Returns a gensim.corpora.Dictionary object."""
     return corpora.Dictionary([__tokenize_text__(text) for text in texts])
 
 
 def __tokenize_text__(text):
+    """Convert text to lowercase, replace periods and commas, and split it into a list."""
     return text.lower().replace(',', '').replace('.', '').split()
 
 # def add_tfidf_to(texts):
