@@ -8,6 +8,8 @@ from givinggraph.models import DBSession, Nonprofit, Company, News_Article, Nonp
 
 
 def add_nonprofit_info_to_db(ein):
+    """Takes the EIN of a nonprofit as input. If the nonprofit is already in the DB, its info is updated.
+    If the nonprofit is not in the DB, it is inserted."""
     query = DBSession.query(Nonprofit).filter(Nonprofit.ein == ein)
     nonprofit_db = query.first()
     nonprofit_gs = givinggraph.guidestar.search.get_nonprofit(ein)
@@ -35,8 +37,8 @@ def add_nonprofit_info_to_db(ein):
 
 
 def update_nonprofit_twitter_name(nonprofits_id):
-    '''Takes the ID of a nonprofit and uses Yahoo to try to find the Twitter name for that nonprofit.
-     If found, the nonprofit's entry in the DB is updated.'''
+    """Takes the ID of a nonprofit and uses Yahoo to try to find the Twitter name for that nonprofit.
+     If found, the nonprofit's entry in the DB is updated."""
     nonprofit = DBSession.query(Nonprofit).get(nonprofits_id)
     twitter_url = givinggraph.yahoo.search.get_search_results('twitter ' + nonprofit.name)[0]
     twitter_name = None
@@ -47,8 +49,8 @@ def update_nonprofit_twitter_name(nonprofits_id):
 
 
 def update_null_nonprofit_twitter_ids():
-    '''Finds nonprofits for which the Twitter name is not null, but the Twitter user ID is null,
-    and gives the Twitter user ID a value.'''
+    """Finds nonprofits for which the Twitter name is not null, but the Twitter user ID is null,
+    and gives the Twitter user ID a value."""
     query = DBSession.query(Nonprofit).filter(Nonprofit.twitter_id == None)  # nopep8
     nonprofits = query.all()
     screen_names = [nonprofit.twitter_name for nonprofit in nonprofits]
@@ -59,9 +61,9 @@ def update_null_nonprofit_twitter_ids():
 
 
 def add_news_articles_to_db_for_nonprofit(nonprofit, companies):
-    '''Takes a Nonprofit object and a list of Company objects as input. Searches the web for
+    """Takes a Nonprofit object and a list of Company objects as input. Searches the web for
     news articles related to the nonprofit and stores them in the DB. And if any of the articles
-    contain a company name, a link is made in the DB between the article and the company.'''
+    contain a company name, a link is made in the DB between the article and the company."""
     print 'Getting and processing news articles for nonprofit with ID {0}...'.format(nonprofit.nonprofits_id)
     query = DBSession.query(News_Article).filter(News_Article.nonprofits_id == nonprofit.nonprofits_id)
     already_retrieved_urls = [news_article.url for news_article in query.all()]
@@ -77,6 +79,7 @@ def add_news_articles_to_db_for_nonprofit(nonprofit, companies):
 
 
 def add_news_articles_to_db_for_nonprofits():
+    """Look up news articles for every nonprofit in the DB, and store any news articles containing company names."""
     print 'Getting companies...'
     companies = DBSession.query(Company).all()
     print 'Done loading companies.'
@@ -85,6 +88,7 @@ def add_news_articles_to_db_for_nonprofits():
 
 
 def add_similarity_scores_for_nonprofit_descriptions():
+    """Calculate similarity scores for every pair of nonprofit descriptions and store them in the DB."""
     nonprofits = DBSession.query(Nonprofit).filter(Nonprofit.description != None).all()  # nopep8
     similarity_matrix = similarity.get_similarity_scores_all_pairs([nonprofit.description for nonprofit in nonprofits])
     for m in xrange(len(similarity_matrix) - 1):
