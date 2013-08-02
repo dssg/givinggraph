@@ -4,7 +4,7 @@ import givinggraph.news.searcher as news_searcher
 import givinggraph.news.parser as news_parser
 import givinggraph.twitter.users
 import givinggraph.yahoo.search
-from givinggraph.models import DBSession, Nonprofit, Company, News_Article
+from givinggraph.models import DBSession, Nonprofit, Company, News_Article, Nonprofits_Similarity_By_Description
 
 
 def add_nonprofit_info_to_db(ein):
@@ -49,7 +49,7 @@ def update_nonprofit_twitter_name(nonprofits_id):
 def update_null_nonprofit_twitter_ids():
     '''Finds nonprofits for which the Twitter name is not null, but the Twitter user ID is null,
     and gives the Twitter user ID a value.'''
-    query = DBSession.query(Nonprofit).filter(Nonprofit.twitter_id is None)
+    query = DBSession.query(Nonprofit).filter(Nonprofit.twitter_id == None)
     nonprofits = query.all()
     screen_names = [nonprofit.twitter_name for nonprofit in nonprofits]
     screen_name_to_id_map = givinggraph.twitter.users.get_screen_name_to_id_map(screen_names)
@@ -84,8 +84,10 @@ def add_news_articles_to_db_for_nonprofits():
         add_news_articles_to_db_for_nonprofit(nonprofit, companies)
 
 
-def calculate_similarity_scores_for_nonprofit_descriptions():
-    nonprofits = DBSession.query(Nonprofit).all()
-    print 'Calculating similarity...'
-    similarity_matrix = similarity.get_similarity_scores_all_pairs([nonprofit.description for nonprofit in nonprofits if nonprofit.description is not None])
-    return similarity_matrix
+def add_similarity_scores_for_nonprofit_descriptions():
+    nonprofits = DBSession.query(Nonprofit).filter(Nonprofit.description != None).all()
+    similarity_matrix = similarity.get_similarity_scores_all_pairs([nonprofit.description for nonprofit in nonprofits])
+    for m in xrange(len(similarity_matrix) - 1):
+        for n in xrange(m + 1):
+            DBSession.add(Nonprofits_Similarity_By_Description(nonprofits[m].nonprofits_id, nonprofits[n].nonprofits_id, similarity_matrix[m][n]))
+    DBSession.commit()
