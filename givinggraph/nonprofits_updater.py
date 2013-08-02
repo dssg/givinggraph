@@ -34,6 +34,8 @@ def add_nonprofit_info_to_db(ein):
 
 
 def update_nonprofit_twitter_name(nonprofits_id):
+    '''Takes the ID of a nonprofit and uses Yahoo to try to find the Twitter name for that nonprofit.
+     If found, the nonprofit's entry in the DB is updated.'''
     nonprofit = DBSession.query(Nonprofit).get(nonprofits_id)
     twitter_url = givinggraph.yahoo.search.get_search_results('twitter ' + nonprofit.name)[0]
     twitter_name = None
@@ -56,6 +58,9 @@ def update_null_nonprofit_twitter_ids():
 
 
 def add_news_articles_to_db_for_nonprofit(nonprofit, companies):
+    '''Takes a Nonprofit object and a list of Company objects as input. Searches the web for
+    news articles related to the nonprofit and stores them in the DB. And if any of the articles 
+    contain a company name, a link is made in the DB between the article and the company.'''
     print 'Getting and processing news articles for nonprofit with ID {0}...'.format(nonprofit.nonprofits_id)
     query = DBSession.query(News_Article).filter(News_Article.nonprofits_id == nonprofit.nonprofits_id)
     already_retrieved_urls = [news_article.url for news_article in query.all()]
