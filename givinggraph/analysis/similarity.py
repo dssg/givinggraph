@@ -15,13 +15,13 @@ def get_similarity_scores_all_pairs(texts):
 
 def __get_similarity_scores__(corpora_dictionary, similarity_matrix, text):
     '''Takes a similarity matrix and string as input and returns a list, where element i represents the cosine similarity of text and vector i in the similarity matrix.'''
-    vec = corpora_dictionary.doc2bow(text.lower().split())
+    vec = corpora_dictionary.doc2bow(__tokenize_text__(text))
     return list(similarity_matrix[vec])
 
 
 def __get_tfidf_similarity_matrix__(corpora_dictionary, texts):
     '''Takes a gensim.corpora.Dictionary object and list of strings as input. Returns a gensim.similarities.SparseMatrixSimilarity object for calculating cosine similarities.'''
-    texts_tokenized = [text.lower().split() for text in texts]
+    texts_tokenized = [__tokenize_text__(text) for text in texts]
 
     # gensim has us convert tokens to numeric IDs using corpora.Dictionary
     corpus = [corpora_dictionary.doc2bow(text_tokenized) for text_tokenized in texts_tokenized]
@@ -33,8 +33,11 @@ def __get_tfidf_similarity_matrix__(corpora_dictionary, texts):
 
 def __get_corpora_dictionary__(texts):
     '''Takes a list of strings as input. Returns a gensim.corpora.Dictionary object.'''
-    return corpora.Dictionary([text.lower().split() for text in texts])
+    return corpora.Dictionary([__tokenize_text__(text) for text in texts])
 
+
+def __tokenize_text__(text):
+    return text.lower().replace(',', '').replace('.', '').split()
 
 # def add_tfidf_to(texts):
 #     freq_dists = get_frequency_distributions(texts)
