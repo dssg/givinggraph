@@ -26,7 +26,7 @@ def __get_tfidf_similarity_matrix__(corpora_dictionary, texts):
     # gensim has us convert tokens to numeric IDs using corpora.Dictionary
     corpus = [corpora_dictionary.doc2bow(text_tokenized) for text_tokenized in texts_tokenized]
     corpus_tfidf = models.TfidfModel(corpus, normalize=True)[corpus]  # Feed corpus back into its own model to get the TF-IDF values for the texts
-    
+
     # If texts are all identical, the call to similarities.MatrixSimilarity(...) produces an exception.
     return similarities.MatrixSimilarity(corpus_tfidf)
 
