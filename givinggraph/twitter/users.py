@@ -1,9 +1,8 @@
 import time
 from givinggraph.twitter.common import twitter_get
 
-
-# takes a list of Twitter screen names as input, and returns a dictionary mapping screen names to IDs
 def get_screen_name_to_id_map(screen_names):
+    """Takes a list of Twitter screen names as input, and returns a dictionary mapping screen names to IDs."""
     base_url = 'https://api.twitter.com/1.1/users/lookup.json'
     screen_name_to_id_map = {}
 
@@ -40,6 +39,7 @@ def get_screen_name_to_id_map(screen_names):
 
 
 def get_followers(user_id):
+    """Takes a Twitter user ID as input, and returns that user's followers in the form of a list of Twitter IDs."""
     base_url = 'https://api.twitter.com/1.1/followers/ids.json'
     params = {'user_id': user_id, 'count': 5000}
     all_followers = []

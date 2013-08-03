@@ -9,7 +9,7 @@ company_name_regex_cache = {}
 
 
 def get_article_parts(html):
-    '''Return headline, body'''
+    """Take HTML and return extracted headline and body."""
     g = Goose({'use_meta_language': False, 'enable_image_fetching': False})
     try:
         article = g.extract(raw_html=html)
@@ -19,8 +19,8 @@ def get_article_parts(html):
 
 
 def get_company_mentions_in_text(text, company_name):
-    '''Finds mentions of a company in some text. Assumes company_name contains no puncutation (so
-        "Apple Inc" instead of "Apple, Inc."), but the company name in text can contain punctuation.'''
+    """Finds mentions of a company in some text. Assumes company_name contains no puncutation (so
+        "Apple Inc" instead of "Apple, Inc."), but the company name in text can contain punctuation."""
     if company_name not in excerpt_regex_cache:
         __populate_regex_caches__(company_name)
 
@@ -32,17 +32,19 @@ def get_company_mentions_in_text(text, company_name):
 
 
 def __populate_regex_caches__(company_name):
+    """Adds regexes for the given company name to company_name_regex_cache and excerpt_regex_cache."""
     company_name_regex_text = __get_regexed_company_name_text__(company_name)
     company_name_regex_cache[company_name] = re.compile(company_name_regex_text)
     excerpt_regex_cache[company_name] = re.compile('(?:\w+\W{{1,5}}){{0,{before}}}{company}(?:\W{{1,5}}\w+){{0,{after}}}'.format(before=EXCERPT_LOOK_AROUND_SIZE, company=company_name_regex_text, after=EXCERPT_LOOK_AROUND_SIZE))
 
 
 def __get_regexed_company_name_text__(company_name):
+    """Takes a company name and returns a regex string to account for possible punctuation in the company name."""
     return '\\b' + FIND_COMPANY_SUFFIX_REGEX.sub(',? \\1\\.?', re.escape(company_name)).strip() + '\\b'
 
 
 def contains_supportive_wording(text):
-    ''' Words found in news articles that relate companies to nonprofits:
+    """Words found in news articles that relate companies to nonprofits in a positive way:
             partner
             partnership
             sponsor
@@ -67,7 +69,7 @@ def contains_supportive_wording(text):
             help
             grant
             award
-    '''
+    """
 
     supportive_words = ['partner',
                         'sponsor',
@@ -97,6 +99,10 @@ def contains_supportive_wording(text):
 
 
 def contains_opposing_wording(text):
+    """Words found in news articles that relates companies to nonprofits in a negative way:
+            criticism
+            criticized
+    """
     opposing_words = ['critic']
     for word in opposing_words:
         if word in text:

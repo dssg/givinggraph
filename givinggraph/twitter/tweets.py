@@ -1,10 +1,8 @@
 import time
 from givinggraph.twitter.common import twitter_get
 
-
-# takes a Twitter user id (a string) as input and returns all of that user's
-# tweets, going back as far as the API will let you
 def get_tweets(user_id, include_retweets):
+    """Takes a Twitter user id (a string) as input and returns all of that user's tweets, going back as far as the API will let you."""
     base_url = 'https://api.twitter.com/1.1/statuses/user_timeline.json'
     params = {'user_id': user_id,
               'include_rts': include_retweets,
