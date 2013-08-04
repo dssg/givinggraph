@@ -10,6 +10,7 @@ Financials = namedtuple('Financials', 'total_revenue total_assets program_expens
 
 # returns Person namedtuple if the response is OK, returns None is the response is not OK
 def get_nonprofit(organization_id):
+    """For the given Guidestar organization ID, retrieve basic nonprofit info from Guidestar's exchange API."""
     url = 'https://data.guidestar.org/v1/commondata/' + organization_id + '.json'
 
     user = givinggraph.config.read_config('guide_star', 'user')

@@ -7,6 +7,7 @@ Nonprofit = namedtuple('Nonprofit', 'ein name mission city state zip ntee_code g
 
 # returns Nonprofit namedtuple if the response is OK, returns None is the response is not OK
 def get_nonprofit(ein):
+    """For the given EIN, retrieve basic nonprofit info from Guidestar's search API."""
     url = 'https://data.guidestar.org/v1/search.json?q=ein:' + ein
 
     user = givinggraph.config.read_config('guide_star', 'user')

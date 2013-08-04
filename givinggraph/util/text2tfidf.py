@@ -27,7 +27,7 @@ from sklearn.feature_extraction.text import CountVectorizer
 
 
 def text2tfidf(data_generator):
-    '''Transform text data into tf-idf vectors. This can be used in a
+    """Transform text data into tf-idf vectors. This can be used in a
     streaming fashion, so that each line is represented sparsely as its read.
 
     data_generator .... generator of strings. This can simply be a list of
@@ -41,7 +41,7 @@ def text2tfidf(data_generator):
     [ 0.          0.57973867  0.81480247]
     >>> print sorted(vocab.iteritems(), key=operator.itemgetter(1))
     [(u'apple', 0), (u'banana', 1), (u'cherry', 2)]
-    '''
+    """
     counter = CountVectorizer(min_df=0.)
     data = counter.fit_transform(data_generator)
     tfidf = TfidfTransformer()
@@ -50,7 +50,7 @@ def text2tfidf(data_generator):
 
 
 def print_sparse_matrix(data):
-    'Print a sparse matrix in format <index>:<value>'
+    """Print a sparse matrix in format <index>:<value>"""
     for ri in range(data.get_shape()[0]):
         row = data.getrow(ri)
         print ' '.join(['%d:%g' % (i, d)
