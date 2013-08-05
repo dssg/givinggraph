@@ -47,12 +47,12 @@ def forceatlas2_layout(G, iterations=10, linlog=False, pos=None, nohubs=False, k
     # This comes from the spares FR layout in nx
     A = nx.to_scipy_sparse_matrix(G, dtype='f')
     nnodes, _ = A.shape
-    from scipy.sparse import spdiags, coo_matrix
+    from scipy.sparse import coo_matrix
     try:
         A = A.tolil()
     except:
         A = (coo_matrix(A)).tolil()
-    if pos == None:
+    if pos is None:
         pos = np.asarray(np.random.random((nnodes, dim)), dtype=A.dtype)
     else:
         pos = pos.astype(A.dtype)
