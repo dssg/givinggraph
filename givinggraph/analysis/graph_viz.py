@@ -3,6 +3,21 @@ import csv
 import matplotlib.pyplot as plt
 import forceatlas as fa2
 import community
+import math
+
+OUT_WIDTH = 8000
+OUT_HEIGHT = 6000
+dpi = 100
+
+ITERATIONS = 500
+nohubs = True
+
+EDGE_WIDTH = 0.5
+EDGE_ALPHA = 0.2
+
+NODE_SIZE = 200
+NODE_ALPHA = 0.5
+NODE_LABEL_FONT_SIZE = 8
 
 community_colors = {
     0: '#9e41d0',
@@ -33,20 +48,30 @@ community_colors = {
 
 G = nx.Graph()
 
-reader = csv.reader(open('friends.csv', 'rb'), delimiter=';')
+reader = csv.reader(open('similarity2.csv', 'rb'), delimiter=',')
+next(reader)
 
 for edge in reader:
-    my_list = [edge[0], edge[1]]
-    my_list2 = [unicode(s, errors='ignore') for s in my_list]
-    G.add_edge(my_list2[0], my_list2[1])
+    my_list = [edge[0], edge[1], float(edge[2])]
+    G.add_edge(my_list[0], my_list[1], weight=my_list[2])
+
+k = math.sqrt(1.0/len(G.nodes()))
 
 partition = community.best_partition(G)
-pos = fa2.forceatlas2_layout(G, iterations=500, nohubs=True)
+#pos = fa2.forceatlas2_layout(G, iterations=ITERATIONS, nohubs=nohubs, linlog=True)
+pos=nx.spring_layout(G, iterations=ITERATIONS)
 colors = [community_colors.get(partition[node], '#000000') for node in G.nodes()]
-nx.draw(G, pos, node_color=colors)
+
+nx.draw_networkx_nodes(G, pos, node_color=colors, node_size=NODE_SIZE)
+nx.draw_networkx_edges(G, pos, width=EDGE_WIDTH, alpha=EDGE_ALPHA)
+nx.draw_networkx_labels(G,pos,font_size=NODE_LABEL_FONT_SIZE, alpha=NODE_ALPHA)
+
+#nx.draw_networkx(G,pos=pos, node_color=colors)
+
+nx.write_gml(G,'graph.gml')
 
 fig = plt.gcf()
-fig.set_size_inches(80, 60)
-plt.savefig('graph.png', dpi=100)
+fig.set_size_inches(OUT_WIDTH/dpi, OUT_HEIGHT/dpi)
+plt.savefig('fa2.png', dpi=dpi)
 
-plt.show()
+#plt.show()
