@@ -94,5 +94,8 @@ celery -A givinggraph.tasks worker --loglevel=INFO
 python -m givinggraph.tasks
 ```
 
+#### Message Broker
+Celery depends on a message broker service. See http://docs.celeryproject.org/en/latest/getting-started/first-steps-with-celery.html#choosing-a-broker for some options.
+
 ## License
 MIT License, see LICENSE.txt.
