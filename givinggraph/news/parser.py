@@ -1,7 +1,7 @@
 from goose import Goose
 import re
 
-EXCERPT_LOOK_AROUND_SIZE = 20  # how many characters to get before and after company name
+EXCERPT_LOOK_AROUND_SIZE = 20  # how many words to get before and after company name
 FIND_COMPANY_SUFFIX_REGEX = re.compile(' (Inc|Corp|Co|Ltd)')
 
 excerpt_regex_cache = {}
@@ -19,8 +19,18 @@ def get_article_parts(html):
 
 
 def get_company_mentions_in_text(text, company_name):
-    """Finds mentions of a company in some text. Assumes company_name contains no puncutation (so
-        "Apple Inc" instead of "Apple, Inc."), but the company name in text can contain punctuation."""
+    """Finds mentions of a company in some text. Assumes company_name contains
+        no puncutation (so "Apple Inc" instead of "Apple, Inc."), but the
+        company name in text can contain punctuation.
+
+        Test that context window size is correct:
+        >>> context = 'x ' * EXCERPT_LOOK_AROUND_SIZE
+        >>> match = get_company_mentions_in_text('should not return ' + context + ' Apple ' + context + ' should not return', 'Apple')[0]
+        >>> 'Apple' in match
+        True
+        >>> 'should not return' in match
+        False
+    """
     if company_name not in excerpt_regex_cache:
         __populate_regex_caches__(company_name)
 
@@ -69,6 +79,9 @@ def contains_supportive_wording(text):
             help
             grant
             award
+
+    >>> contains_supportive_wording('A partner is cool')
+    True
     """
 
     supportive_words = ['partner',
