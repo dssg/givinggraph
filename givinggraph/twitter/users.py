@@ -1,41 +1,21 @@
-import time
 from givinggraph.twitter.common import twitter_get
 
 
 def get_screen_name_to_id_map(screen_names):
-    """Takes a list of Twitter screen names as input, and returns a dictionary mapping screen names to IDs."""
+    """Takes a list of Twitter screen names as input, and returns a dictionary mapping lower-case screen names to IDs."""
     base_url = 'https://api.twitter.com/1.1/users/lookup.json'
     screen_name_to_id_map = {}
 
-    # API call accepts 100 users at a time
-    start = 0
-    end = 100
-    first_execution = (len(screen_names) > 0)  # ensures that the while loop executes at least once
-    while first_execution or end < len(screen_names):
-        first_execution = False
-        params = {'screen_name': ','.join(screen_names[start:end])}
-        start = end
-        end = min(end + 100, len(screen_names))
+    chunk_size = 100  # API call accepts 100 users at a time
+    for i in xrange(0, len(screen_names), chunk_size):
+        params = {'screen_name': ','.join(screen_names[i:i + chunk_size])}
 
-        SLEEP_BETWEEN_REQUESTS_SECONDS = 5
-        response = twitter_get(base_url, params)
-        if response is None or response.json() is None:
+        users = twitter_get(base_url, params, 5)
+        if users is None:
             return None  # something went wrong
         else:
-            for user in response.json():
-                screen_name_to_id_map[user['screen_name']] = user['id_str']
-            max_number_of_requests = int(response.headers['X-Rate-Limit-Limit'])
-            requests_remaining = int(response.headers['X-Rate-Limit-Remaining'])
-            print '{0} of {1} requests left.'.format(requests_remaining, max_number_of_requests)
-
-            if requests_remaining > 0:
-                time.sleep(SLEEP_BETWEEN_REQUESTS_SECONDS)
-            else:
-                reset_time = int(response.headers['X-Rate-Limit-Reset'])
-                seconds_until_reset = reset_time - time.gmtime() + 120  # put in a two minute buffer
-
-                print 'Sleeping until the reset window in ' + seconds_until_reset + ' seconds.'
-                time.sleep(seconds_until_reset)
+            for user in users:
+                screen_name_to_id_map[user['screen_name'].lower()] = user['id_str']
     return screen_name_to_id_map
 
 
@@ -44,27 +24,14 @@ def get_followers(user_id):
     base_url = 'https://api.twitter.com/1.1/followers/ids.json'
     params = {'user_id': user_id, 'count': 5000}
     all_followers = []
-    SLEEP_BETWEEN_REQUESTS_SECONDS = 60
     while True:
-        response = twitter_get(base_url, params)
-        chunk_of_followers = response.json()['ids']
-        if chunk_of_followers is None:
+        id_info = twitter_get(base_url, params, 60)
+        if id_info is None:
             return None  # something went wrong
-        elif response.json()['next_cursor'] == 0:
+        elif id_info['next_cursor'] == 0:
             return all_followers
         else:
-            all_followers.extend(chunk_of_followers)
-            params['cursor'] = response.json()['next_cursor_str']
+            all_followers.extend(id_info['ids'])
+            params['cursor'] = id_info['next_cursor_str']
 
-            max_number_of_requests = int(response.headers['X-Rate-Limit-Limit'])
-            requests_remaining = int(response.headers['X-Rate-Limit-Remaining'])
-            print '{0} followers retrieved so far. {1} of {2} requests left.'.format(len(all_followers), requests_remaining, max_number_of_requests)
-
-            if requests_remaining > 0:
-                time.sleep(SLEEP_BETWEEN_REQUESTS_SECONDS)
-            else:
-                reset_time = int(response.headers['X-Rate-Limit-Reset'])
-                seconds_until_reset = reset_time - time.gmtime() + 120  # put in a two minute buffer
-
-                print 'Sleeping until the reset window in ' + seconds_until_reset + ' seconds.'
-                time.sleep(seconds_until_reset)
+            print '{0} followers retrieved so far.'.format(len(all_followers))

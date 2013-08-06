@@ -1,4 +1,3 @@
-import time
 from givinggraph.twitter.common import twitter_get
 
 
@@ -9,10 +8,8 @@ def get_tweets(user_id, include_retweets):
               'include_rts': include_retweets,
               'count': 200}
     all_tweets = []
-    SLEEP_BETWEEN_REQUESTS_SECONDS = 5
     while True:
-        response = twitter_get(base_url, params)
-        chunk_of_tweets = response.json()
+        chunk_of_tweets = twitter_get(base_url, params, 5)
         if chunk_of_tweets is None:
             return None  # something went wrong
         elif len(chunk_of_tweets) == 0:
@@ -22,15 +19,4 @@ def get_tweets(user_id, include_retweets):
             min_id_found = min([tweet['id'] for tweet in chunk_of_tweets])
             params['max_id'] = str(min_id_found - 1)  # we want tweets with IDs lower than min_id_found
 
-            max_number_of_requests = int(response.headers['X-Rate-Limit-Limit'])
-            requests_remaining = int(response.headers['X-Rate-Limit-Remaining'])
-            print '{0} tweets retrieved so far. {1} of {2} requests left.'.format(len(all_tweets), requests_remaining, max_number_of_requests)
-
-            if requests_remaining > 0:
-                time.sleep(SLEEP_BETWEEN_REQUESTS_SECONDS)
-            else:
-                reset_time = int(response.headers['X-Rate-Limit-Reset'])
-                seconds_until_reset = reset_time - time.gmtime() + 120  # put in a two minute buffer
-
-                print 'Sleeping until the reset window in ' + seconds_until_reset + ' seconds.'
-                time.sleep(seconds_until_reset)
+            print '{0} tweets retrieved so far.'.format(len(all_tweets))
