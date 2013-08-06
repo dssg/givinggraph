@@ -1,8 +1,8 @@
 import networkx as nx
 import csv
 import matplotlib.pyplot as plt
-import forceatlas as fa2
-import community
+from . import forceatlas as fa2
+from . import community
 import math
 
 OUT_WIDTH = 8000
@@ -55,23 +55,23 @@ for edge in reader:
     my_list = [edge[0], edge[1], float(edge[2])]
     G.add_edge(my_list[0], my_list[1], weight=my_list[2])
 
-k = math.sqrt(1.0/len(G.nodes()))
+k = math.sqrt(1.0 / len(G.nodes()))
 
 partition = community.best_partition(G)
-#pos = fa2.forceatlas2_layout(G, iterations=ITERATIONS, nohubs=nohubs, linlog=True)
-pos=nx.spring_layout(G, iterations=ITERATIONS)
+# pos = fa2.forceatlas2_layout(G, iterations=ITERATIONS, nohubs=nohubs, linlog=True)
+pos = nx.spring_layout(G, iterations=ITERATIONS)
 colors = [community_colors.get(partition[node], '#000000') for node in G.nodes()]
 
 nx.draw_networkx_nodes(G, pos, node_color=colors, node_size=NODE_SIZE)
 nx.draw_networkx_edges(G, pos, width=EDGE_WIDTH, alpha=EDGE_ALPHA)
-nx.draw_networkx_labels(G,pos,font_size=NODE_LABEL_FONT_SIZE, alpha=NODE_ALPHA)
+nx.draw_networkx_labels(G, pos, font_size=NODE_LABEL_FONT_SIZE, alpha=NODE_ALPHA)
 
-#nx.draw_networkx(G,pos=pos, node_color=colors)
+# nx.draw_networkx(G,pos=pos, node_color=colors)
 
-nx.write_gml(G,'graph.gml')
+nx.write_gml(G, 'graph.gml')
 
 fig = plt.gcf()
-fig.set_size_inches(OUT_WIDTH/dpi, OUT_HEIGHT/dpi)
+fig.set_size_inches(OUT_WIDTH / dpi, OUT_HEIGHT / dpi)
 plt.savefig('fa2.png', dpi=dpi)
 
-#plt.show()
+# plt.show()
