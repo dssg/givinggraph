@@ -1,6 +1,7 @@
 import time
 from givinggraph.twitter.common import twitter_get
 
+
 def get_screen_name_to_id_map(screen_names):
     """Takes a list of Twitter screen names as input, and returns a dictionary mapping screen names to IDs."""
     base_url = 'https://api.twitter.com/1.1/users/lookup.json'
