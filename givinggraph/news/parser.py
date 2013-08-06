@@ -1,7 +1,7 @@
 from goose import Goose
 import re
 
-EXCERPT_LOOK_AROUND_SIZE = 20  # how many characters to get before and after company name
+EXCERPT_LOOK_AROUND_SIZE = 20  # how many words to get before and after company name
 FIND_COMPANY_SUFFIX_REGEX = re.compile(' (Inc|Corp|Co|Ltd)')
 
 excerpt_regex_cache = {}
@@ -24,8 +24,10 @@ def get_company_mentions_in_text(text, company_name):
         company name in text can contain punctuation.
 
         Test that context window size is correct:
-        >>> context = 'x' * EXCERPT_LOOK_AROUND_SIZE
+        >>> context = 'x ' * EXCERPT_LOOK_AROUND_SIZE
         >>> match = get_company_mentions_in_text('should not return ' + context + ' Apple ' + context + ' should not return', 'Apple')[0]
+        >>> 'Apple' in match
+        True
         >>> 'should not return' in match
         False
     """
