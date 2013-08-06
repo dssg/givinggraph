@@ -5,7 +5,7 @@ FROM (
 	WHERE (causes_id, community) IN(
 		SELECT causes_id, community
 		FROM giving.nonprofits_communities_by_description
-		WHERE nonprofits_id = 11117
+		WHERE nonprofits_id = XXX
 	)
 ) as my_table
 JOIN giving.nonprofits as non on non.nonprofits_id = my_table.nonprofits_id
