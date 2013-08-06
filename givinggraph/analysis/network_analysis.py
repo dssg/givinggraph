@@ -1,4 +1,4 @@
-import community
+from . import community
 import networkx as nx
 
 edges_list = [("123", "345", 0.5), ("345", "456", 0.7),
@@ -33,9 +33,19 @@ def compute_hubs_authorities(G):
 
 
 def export_graph(G, name='graph'):
+    """exports the graph"""
     nx.write_gml(G, name + '.gml')
 
-# print compute_hubs_authorities(edges_list)[0]
-# print compute_hubs_authorities(edges_list)[1]
+
+def compute_average_node_connectivity(G):
+    """For the given graph, compute the average connectivity"""
+    return nx.average_node_connectivity(G)
+
+
+def compute_all_pairs_node_connectivity_matrix(G):
+    """For the given graph, returns a numpy 2d ndarray with node connectivity between all pairs of nodes"""
+    return nx.all_pairs_node_connectivity_matrix(G)
+
+
 my_graph = create_graph(edges_list)
 print compute_communities(my_graph)
