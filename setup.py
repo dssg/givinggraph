@@ -27,8 +27,11 @@ setup(
     install_requires=[
         'BeautifulSoup',
         'celery',
-        #'goose', # ignoring for now. not in pypi
+        'goose-extractor',  # see dependency link since not in pypi
         'sqlalchemy',
+    ],
+    dependency_links=[
+        'http://github.com/grangier/python-goose/tarball/master/#egg=goose-extractor-1.0.1'
     ],
     entry_points={
         'console_scripts': [
