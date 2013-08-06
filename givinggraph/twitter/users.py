@@ -13,7 +13,7 @@ def get_screen_name_to_id_map(screen_names):
     first_execution = (len(screen_names) > 0)  # ensures that the while loop executes at least once
     while first_execution or end < len(screen_names):
         first_execution = False
-        params = {'screen_name': '%2c'.join(screen_names[start:end])}  # %2c is the encoding for a comma
+        params = {'screen_name': ','.join(screen_names[start:end])}
         start = end
         end = min(end + 100, len(screen_names))
 
