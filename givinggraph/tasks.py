@@ -130,12 +130,15 @@ def update_null_nonprofit_twitter_ids():
     and gives the Twitter user ID a value."""
     logger.debug('Inside update_null_nonprofit_twitter_ids()')
 
-    query = DBSession.query(Nonprofit).filter(Nonprofit.twitter_id == None)  # nopep8
+    query = DBSession.query(Nonprofit).filter(Nonprofit.twitter_id == None).filter(Nonprofit.twitter_name != None)  # nopep8
     nonprofits = query.all()
     screen_names = [nonprofit.twitter_name for nonprofit in nonprofits]
     screen_name_to_id_map = givinggraph.twitter.users.get_screen_name_to_id_map(screen_names)
     for nonprofit in nonprofits:
-        nonprofit.twitter_id = screen_name_to_id_map[nonprofit.twitter_name]
+        if nonprofit.twitter_name.lower() in screen_name_to_id_map:
+            nonprofit.twitter_id = screen_name_to_id_map[nonprofit.twitter_name.lower()]
+        else:
+            print '"{0}" was not found, the account may have been deleted or the screen name may have changed.'.format(nonprofit.twitter_name)
     DBSession.commit()
 
 
