@@ -72,7 +72,7 @@ To get started:
 2. `git add <files>`; `git commit`
 3. `git pull --rebase`
 4. merge conflicts if needed
-5. Make sure tests pass: `python setup.py test`
+5. Make sure tests pass: `nosetests --with-doctest`
 6. `git push`
 
 [Travis](https://travis-ci.org/dssg/givinggraph) is used for continuous testing
