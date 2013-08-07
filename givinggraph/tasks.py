@@ -23,6 +23,7 @@ FIXME: Add calls to all the other parts of the pipeline (news, twitter, etc)
 FIXME: The REST api will be the one calling this in the future.
 """
 import csv
+import sys
 import givinggraph.analysis.similarity as similarity
 import givinggraph.guidestar.search
 import givinggraph.news.searcher as news_searcher
@@ -242,6 +243,7 @@ def add_similarity_scores_for_nonprofit_tweets():
     # nonprofits = DBSession.query(Nonprofit).filter(Nonprofit.description != None).all()  # nopep8
     # TODO: replace CSV reading with a DB call
     rows = []
+    csv.field_size_limit(sys.maxsize)
     with open('/mnt/data1/Case/twitter_charities_data/tweets_of_charities/charities_csv_tweets_to_cluster.csv', 'rb') as tweets_file:
         reader = csv.reader(tweets_file, delimiter=';')
         rows = [row for row in reader]
