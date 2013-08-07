@@ -78,10 +78,10 @@ def partition_at_level(dendogram, level):
 
     Examples
     --------
-    >>> G=nx.erdos_renyi_graph(100, 0.01)
-    >>> dendo = generate_dendogram(G)
-    >>> for level in range(len(dendo) - 1):
-    >>>     print "partition at level", level, "is", partition_at_level(dendo, level)
+    G=nx.erdos_renyi_graph(100, 0.01)
+    dendo = generate_dendogram(G)
+    for level in range(len(dendo) - 1):
+        print "partition at level", level, "is", partition_at_level(dendo, level)
     """
     partition = dendogram[0].copy()
     for index in range(1, level + 1):
@@ -120,9 +120,9 @@ def modularity(partition, graph):
 
     Examples
     --------
-    >>> G=nx.erdos_renyi_graph(100, 0.01)
-    >>> part = best_partition(G)
-    >>> modularity(part, G)
+    G=nx.erdos_renyi_graph(100, 0.01)
+    part = best_partition(G)
+    modularity(part, G)
     """
     if type(graph) != nx.Graph:
         raise TypeError("Bad graph type, use only non directed graph")
@@ -188,28 +188,28 @@ def best_partition(graph, partition=None):
 
     Examples
     --------
-    >>>  #Basic usage
-    >>> G=nx.erdos_renyi_graph(100, 0.01)
-    >>> part = best_partition(G)
+    #Basic usage
+    G=nx.erdos_renyi_graph(100, 0.01)
+    part = best_partition(G)
 
-    >>> #other example to display a graph with its community:
-    >>> #better with karate_graph() as defined in networkx examples
-    >>> #erdos renyi don't have true community structure
-    >>> G = nx.erdos_renyi_graph(30, 0.05)
-    >>> #first compute the best partition
-    >>> partition = community.best_partition(G)
-    >>>  #drawing
-    >>> size = float(len(set(partition.values())))
-    >>> pos = nx.spring_layout(G)
-    >>> count = 0.
-    >>> for com in set(partition.values()):
-    >>>     count = count + 1.
-    >>>     list_nodes = [nodes for nodes in partition.keys()
-    >>>                                 if partition[nodes] == com]
-    >>>     nx.draw_networkx_nodes(G, pos, list_nodes, node_size = 20,
+    #other example to display a graph with its community:
+    #better with karate_graph() as defined in networkx examples
+    #erdos renyi don't have true community structure
+    G = nx.erdos_renyi_graph(30, 0.05)
+    #first compute the best partition
+    partition = community.best_partition(G)
+    #drawing
+    size = float(len(set(partition.values())))
+    pos = nx.spring_layout(G)
+    count = 0.
+    for com in set(partition.values()):
+        count = count + 1.
+        list_nodes = [nodes for nodes in partition.keys()
+        if partition[nodes] == com]
+        nx.draw_networkx_nodes(G, pos, list_nodes, node_size = 20,
                                     node_color = str(count / size))
-    >>> nx.draw_networkx_edges(G,pos, alpha=0.5)
-    >>> plt.show()
+    nx.draw_networkx_edges(G,pos, alpha=0.5)
+    plt.show()
     """
     dendo = generate_dendogram(graph, partition)
     return partition_at_level(dendo, len(dendo) - 1)
@@ -252,10 +252,10 @@ def generate_dendogram(graph, part_init=None):
 
     Examples
     --------
-    >>> G=nx.erdos_renyi_graph(100, 0.01)
-    >>> dendo = generate_dendogram(G)
-    >>> for level in range(len(dendo) - 1):
-    >>>     print "partition at level", level, "is", partition_at_level(dendo, level)
+    G=nx.erdos_renyi_graph(100, 0.01)
+    dendo = generate_dendogram(G)
+    for level in range(len(dendo) - 1):
+        print "partition at level", level, "is", partition_at_level(dendo, level)
     """
     if type(graph) != nx.Graph:
         raise TypeError("Bad graph type, use only non directed graph")
@@ -313,15 +313,15 @@ def induced_graph(partition, graph):
 
     Examples
     --------
-    >>> n = 5
-    >>> g = nx.complete_graph(2*n)
-    >>> part = dict([])
-    >>> for node in g.nodes():
-    >>>     part[node] = node % 2
-    >>> ind = induced_graph(part, g)
-    >>> goal = nx.Graph()
-    >>> goal.add_weighted_edges_from([(0,1,n*n),(0,0,n*(n-1)/2), (1, 1, n*(n-1)/2)])
-    >>> nx.is_isomorphic(int, goal)
+    n = 5
+    g = nx.complete_graph(2*n)
+    part = dict([])
+    for node in g.nodes():
+        part[node] = node % 2
+    ind = induced_graph(part, g)
+    goal = nx.Graph()
+    goal.add_weighted_edges_from([(0,1,n*n),(0,0,n*(n-1)/2), (1, 1, n*(n-1)/2)])
+    nx.is_isomorphic(int, goal)
     True
     """
     ret = nx.Graph()
