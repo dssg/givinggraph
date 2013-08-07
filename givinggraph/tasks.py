@@ -54,7 +54,7 @@ def process_ein(ein):
                             find_similarity_scores_for_followers.si(),
                             find_communities_for_followers.si())
 
-    twitter_chain = chain(update_nonprofit_twitter_name.si(ein),
+    twitter_chain = chain(update_nonprofit_twitter_name.si(nonprofit),
                           update_null_nonprofit_twitter_ids.si(),
                           group(tweets_chain,
                                 followers_chain))
@@ -84,7 +84,7 @@ def add_guidestar_info_to_db(ein):
                                  None,
                                  nonprofit_gs.city,
                                  nonprofit_gs.state,
-                                 nonprofit_gs.zip_code)
+                                 nonprofit_gs.zip)
         DBSession.add(nonprofit_db)
     else:
         nonprofit_db.name = nonprofit_gs.name
@@ -93,18 +93,17 @@ def add_guidestar_info_to_db(ein):
         nonprofit_db.description = nonprofit_gs.mission
         nonprofit_db.city = nonprofit_gs.mission
         nonprofit_db.state = nonprofit_gs.mission
-        nonprofit_db.ZIP = nonprofit_gs.zip_code
+        nonprofit_db.ZIP = nonprofit_gs.zip
     DBSession.commit()
     return nonprofit_db
 
 
 @celery.task(name='tasks.update_nonprofit_twitter_name')
-def update_nonprofit_twitter_name(nonprofits_id):
+def update_nonprofit_twitter_name(nonprofit):
     """Takes the ID of a nonprofit and uses Yahoo to try to find the Twitter name for that nonprofit.
      If found, the nonprofit's entry in the DB is updated."""
-    logger.debug('Inside update_nonprofit_twitter_name({0})'.format(nonprofits_id))
+    logger.debug('Inside update_nonprofit_twitter_name(nonprofit) for nonprofits_id {0}'.format(nonprofit.nonprofits_id))
 
-    nonprofit = DBSession.query(Nonprofit).get(nonprofits_id)
     twitter_url = givinggraph.yahoo.search.get_search_results('twitter ' + nonprofit.name)[0]
     twitter_name = None
     if twitter_url[:11] == 'twitter.com':
