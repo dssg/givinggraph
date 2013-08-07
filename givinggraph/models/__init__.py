@@ -104,3 +104,16 @@ class Nonprofits_Similarity_By_Description(Base):
         self.charity1_id = charity1_id
         self.charity2_id = charity2_id
         self.similarity = similarity
+
+
+class Nonprofits_Similarity_By_Tweets(Base):
+    __tablename__ = 'nonprofits_similarity_by_tweets2'
+    nonprofits_similarity_by_tweets_id = Column(Integer, primary_key=True)
+    twitter_name1 = Column(Integer)
+    twitter_name2 = Column(Integer)
+    similarity = Column(Float)
+
+    def __init__(self, twitter_name1, twitter_name2, similarity):
+        self.twitter_name1 = twitter_name1
+        self.twitter_name2 = twitter_name2
+        self.similarity = similarity
