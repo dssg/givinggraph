@@ -27,7 +27,10 @@ setup(
     install_requires=[
         'BeautifulSoup',
         'celery',
+        'gensim',
         'goose-extractor',  # see dependency link since not in pypi
+        'matplotlib',
+        'networkx',
         'sqlalchemy',
     ],
     dependency_links=[
@@ -39,6 +42,7 @@ setup(
         ],
     },
     tests_require=[
+        'nose',
         'pep8',
         'pyflakes',
     ],
