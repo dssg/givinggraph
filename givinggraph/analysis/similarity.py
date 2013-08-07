@@ -3,19 +3,23 @@ from gensim import corpora, models, similarities
 
 
 def get_similarity_scores_all_pairs(texts):
-    """Takes a list of strings as input and returns a matrix of cosine similarity values where element [m][n] represents the similarity between text m and text n."""
+    """Takes a list of strings as input and returns a matrix of cosine similarity values where element [m][n] represents the similarity between text m and text n.
+    >>> get_similarity_scores_all_pairs(['apple banana', 'banana cherry'])
+    array([[ 1.,  0.],
+           [ 0.,  1.]])
+    """
     n = len(texts)
     all_similarities = numpy.empty(shape=(n, n))
     corpora_dictionary = __get_corpora_dictionary__(texts)
-    similarity_matrix = __get_tfidf_similarity_matrix__(corpora_dictionary, texts)
+    similarity_matrix, tfidf = __get_tfidf_similarity_matrix__(corpora_dictionary, texts)
     for i, text in enumerate(texts):
-        all_similarities[i] = __get_similarity_scores__(corpora_dictionary, similarity_matrix, text)
+        all_similarities[i] = __get_similarity_scores__(corpora_dictionary, similarity_matrix, text, tfidf)
     return all_similarities
 
 
-def __get_similarity_scores__(corpora_dictionary, similarity_matrix, text):
+def __get_similarity_scores__(corpora_dictionary, similarity_matrix, text, tfidf):
     """Takes a similarity matrix and string as input and returns a list, where element i represents the cosine similarity of text and vector i in the similarity matrix."""
-    vec = corpora_dictionary.doc2bow(__tokenize_text__(text))
+    vec = tfidf[corpora_dictionary.doc2bow(__tokenize_text__(text))]
     return list(similarity_matrix[vec])
 
 
@@ -25,10 +29,11 @@ def __get_tfidf_similarity_matrix__(corpora_dictionary, texts):
 
     # gensim has us convert tokens to numeric IDs using corpora.Dictionary
     corpus = [corpora_dictionary.doc2bow(text_tokenized) for text_tokenized in texts_tokenized]
-    corpus_tfidf = models.TfidfModel(corpus, normalize=True)[corpus]  # Feed corpus back into its own model to get the TF-IDF values for the texts
+    tfidf = models.TfidfModel(corpus, normalize=True)
+    corpus_tfidf = tfidf[corpus]  # Feed corpus back into its own model to get the TF-IDF values for the texts
 
     # If texts are all identical, the call to similarities.MatrixSimilarity(...) produces an exception.
-    return similarities.MatrixSimilarity(corpus_tfidf)
+    return similarities.MatrixSimilarity(corpus_tfidf), tfidf
 
 
 def __get_corpora_dictionary__(texts):
@@ -37,7 +42,10 @@ def __get_corpora_dictionary__(texts):
 
 
 def __tokenize_text__(text):
-    """Convert text to lowercase, replace periods and commas, and split it into a list."""
+    """Convert text to lowercase, replace periods and commas, and split it into a list.
+    >>> __tokenize_text__('hi. I am, a, sentence.')
+    ['hi', 'i', 'am', 'a', 'sentence']
+    """
     return text.lower().replace(',', '').replace('.', '').split()
 
 # def add_tfidf_to(texts):
