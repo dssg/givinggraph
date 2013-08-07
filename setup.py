@@ -29,7 +29,7 @@ setup(
         'celery',
         'gensim',
         'goose-extractor',  # see dependency link since not in pypi
-        'matplotlib',
+        # 'matplotlib', # ignoring for now to see if travis stops complaining
         'networkx',
         'sqlalchemy',
     ],
