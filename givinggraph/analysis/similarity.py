@@ -11,7 +11,7 @@ def get_similarity_scores_all_pairs(texts):
     """
     n = len(texts)
     all_similarities = numpy.empty(shape=(n, n))
-    similarity_index, tfidf = __get_tfidf_similarity_index__(texts)
+    similarity_index = __get_tfidf_similarity_index__(texts)
 
     for i in xrange(n):
         all_similarities[i] = similarity_index.similarity_by_id(i)
