@@ -232,7 +232,9 @@ def add_similarity_scores_for_nonprofit_descriptions():
     for m in xrange(len(similarity_matrix) - 1):
         for n in xrange(m + 1, len(similarity_matrix)):
             DBSession.add(Nonprofits_Similarity_By_Description(nonprofits[m].nonprofits_id, nonprofits[n].nonprofits_id, similarity_matrix[m][n]))
+    print 'Writing nonprofit description similarities to DB...'
     DBSession.commit()
+    print 'Done writing nonprofit description similarities to DB.'
 
 
 @celery.task(name='tasks.add_similarity_scores_for_nonprofit_tweets')
@@ -252,8 +254,9 @@ def add_similarity_scores_for_nonprofit_tweets():
     for m in xrange(len(similarity_matrix) - 1):
         for n in xrange(m + 1, len(similarity_matrix)):
             DBSession.add(Nonprofits_Similarity_By_Tweets(rows[m][0], rows[n][0], similarity_matrix[m][n]))
-            #DBSession.add(Nonprofits_Similarity_By_Description(nonprofits[m].nonprofits_id, nonprofits[n].nonprofits_id, similarity_matrix[m][n]))
+    print 'Writing nonprofit tweet similarities to DB...'
     DBSession.commit()
+    print 'Done writing nonprofit tweet similarities to DB.'
 
 
 if __name__ == '__main__':

@@ -21,12 +21,17 @@ def get_similarity_scores_all_pairs(texts):
 def __get_tfidf_similarity_index__(texts):
     """Takes a list of strings as input. Returns a gensim.Similarity object for calculating cosine similarities."""
     texts_tokenized = [__tokenize_text__(text) for text in texts]
+    print 'Creating corpora dictionary...'
     corpora_dict = corpora.Dictionary(texts_tokenized)
+    print 'Done creating corpora dictionary.'
     # gensim has us convert tokens to numeric IDs using corpora.Dictionary
     corpus = [corpora_dict.doc2bow(text_tokenized) for text_tokenized in texts_tokenized]
     corpus_tfidf = models.TfidfModel(corpus, normalize=True)[corpus]  # Feed corpus back into its own model to get the TF-IDF values for the texts
 
-    return Similarity(None, corpus_tfidf, num_features=len(corpora_dict))
+    print 'Creating Similarity index...'
+    index = Similarity(None, corpus_tfidf, num_features=len(corpora_dict))
+    print 'Done creating Similarity index.'
+    return index
 
 
 def __tokenize_text__(text):
