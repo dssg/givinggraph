@@ -47,9 +47,9 @@ def process_ein(ein):
     nonprofit = add_guidestar_info_to_db(ein)
 
     tweets_chain = chain(get_tweets_for_nonprofit.si(nonprofit),
-                         find_similarity_scores_for_tweets.si(),
+                         add_similarity_scores_for_nonprofit_tweets.si(),
                          find_communities_for_tweets.si())
-    descriptions_chain = chain(find_similarity_scores_for_descriptions.si(),
+    descriptions_chain = chain(add_similarity_scores_for_nonprofit_descriptions.si(),
                                find_communities_for_descriptions.si())
     followers_chain = chain(get_followers_for_nonprofit.si(nonprofit),
                             find_similarity_scores_for_followers.si(),
@@ -152,18 +152,6 @@ def get_tweets_for_nonprofit(nonprofit):
 def get_followers_for_nonprofit(nonprofit):
     """Retrieve followers for the given nonprofit and store them in the DB."""
     logger.debug('Inside get_followers_for_nonprofit(nonprofit) for nonprofits_id {0}'.format(nonprofit.nonprofits_id))
-
-
-@celery.task(name='tasks.find_similarity_scores_for_tweets')
-def find_similarity_scores_for_tweets():
-    """Recalculate similarity scores for tweets."""
-    logger.debug('Inside find_similarity_scores_for_tweets()')
-
-
-@celery.task(name='tasks.find_similarity_scores_for_descriptions')
-def find_similarity_scores_for_descriptions():
-    """Recalculate similarity scores for descriptions."""
-    logger.debug('Inside find_similarity_scores_for_descriptions()')
 
 
 @celery.task(name='tasks.find_similarity_scores_for_followers')
