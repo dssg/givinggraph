@@ -7,7 +7,7 @@ edges_list = [("123", "345", 0.5), ("345", "456", 0.7),
 
 # first create a Graph, then give the graph as a parameter to the other functions
 def create_graph(edges_list, directed=False, weighted=True):
-    """For the given weighted edges, create a graph object"""
+    """For the given weighted edges, create a graph object."""
     G = nx.DiGraph() if directed else nx.Graph()
     if weighted:
         G.add_weighted_edges_from(edges_list)
@@ -17,7 +17,13 @@ def create_graph(edges_list, directed=False, weighted=True):
 
 
 def compute_communities(G):
-    """For the given graph, find the communities for each node."""
+    """For the given graph, find the communities for each node.
+    >>> p = compute_communities(create_graph(edges_list))
+    >>> p['1'] == p['123']
+    True
+    >>> p['345'] == p['456']
+    True
+    """
     if isinstance(G, nx.DiGraph):
         G = G.to_undirected()
     partition = community.best_partition(G)
