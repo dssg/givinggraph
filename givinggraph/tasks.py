@@ -28,6 +28,7 @@ import givinggraph.analysis.similarity as similarity
 import givinggraph.guidestar.search
 import givinggraph.news.searcher as news_searcher
 import givinggraph.news.parser as news_parser
+import givinggraph.twitter.tweets
 import givinggraph.twitter.users
 import givinggraph.yahoo.search
 from celery import Celery
@@ -44,19 +45,29 @@ logger = get_task_logger(__name__)
 
 
 def process_ein(ein):
+    # lookup guidestar info before doing anything else.
     nonprofit = add_guidestar_info_to_db(ein)
 
-    tweets_chain = chain(get_tweets_for_nonprofit.si(nonprofit),
-                         add_similarity_scores_for_nonprofit_tweets.si(),
+    twitter_chain = chain(update_nonprofit_twitter_name.si(nonprofit),
+                          group(get_tweets_for_nonprofit.si(nonprofit),
+                                get_followers_for_nonprofit.si(nonprofit)))
+
+    news_chain = chain(add_news_articles_to_db_for_nonprofits.si())
+
+    return group(twitter_chain, news_chain).apply_async()
+
+
+@celery.task(name='tasks.perform_aggregate_tasks')
+def perform_aggregate_tasks():
+    """Several tasks operate over multiple nonprofits (possibly all nonprofits). This function will execute those tasks."""
+    tweets_chain = chain(add_similarity_scores_for_nonprofit_tweets.si(),
                          find_communities_for_tweets.si())
     descriptions_chain = chain(add_similarity_scores_for_nonprofit_descriptions.si(),
                                find_communities_for_descriptions.si())
-    followers_chain = chain(get_followers_for_nonprofit.si(nonprofit),
-                            find_similarity_scores_for_followers.si(),
+    followers_chain = chain(find_similarity_scores_for_followers.si(),
                             find_communities_for_followers.si())
 
-    twitter_chain = chain(update_nonprofit_twitter_name.si(nonprofit),
-                          update_null_nonprofit_twitter_ids.si(),
+    twitter_chain = chain(update_null_nonprofit_twitter_ids.si(),
                           group(tweets_chain,
                                 followers_chain))
 
@@ -146,6 +157,12 @@ def update_null_nonprofit_twitter_ids():
 def get_tweets_for_nonprofit(nonprofit):
     """Retrieve tweets for the given nonprofit and store them in the DB."""
     logger.debug('Inside get_tweets_for_nonprofit(nonprofit) for nonprofits_id {0}'.format(nonprofit.nonprofits_id))
+    if nonprofit.twitter_id is not None:
+        givinggraph.twitter.tweets.get_tweets_by_id(nonprofit.twitter_id, True)
+    elif nonprofit.twitter_name is not None:
+        givinggraph.twitter.tweets.get_tweets_by_name(nonprofit.twitter_name, True)
+    else:
+        pass
 
 
 @celery.task(name='tasks.get_followers_for_nonprofit')
