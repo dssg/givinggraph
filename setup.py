@@ -27,6 +27,7 @@ setup(
     install_requires=[
         'BeautifulSoup',
         'celery',
+        'flask',
         'gensim',
         'goose-extractor',  # see dependency link since not in pypi
         # 'matplotlib', # ignoring for now to see if travis stops complaining
