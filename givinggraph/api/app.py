@@ -5,7 +5,6 @@ documentation.
 # FIXME: Use SQLAlchemy instead of raw sql
 
 
-import argparse
 import json
 
 from flask import Flask
@@ -13,11 +12,6 @@ import MySQLdb
 import MySQLdb.cursors
 
 import givinggraph.config as config
-
-ap = argparse.ArgumentParser(description=__doc__,
-                             formatter_class=argparse.RawTextHelpFormatter)
-
-args = ap.parse_args()
 
 app = Flask(__name__)
 db = None
