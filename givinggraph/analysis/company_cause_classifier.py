@@ -7,6 +7,8 @@ donations of $1M or more from companies to causes."""
 import argparse
 from collections import defaultdict
 import io
+import re
+import string
 
 import numpy as np
 from sklearn import cross_validation, metrics
@@ -30,15 +32,19 @@ ap.add_argument('--causes',
                 help='file in format company_name<TAB>cause . Note that companies may appear more than once.')
 
 args = ap.parse_args()
+punct_re = re.compile('[%s]' % re.escape(string.punctuation))
+company_words = set()
 
 
 def read_causes(filename):
+    global company_words
     causes = set()
     co2causes = defaultdict(lambda: set())
     for line in io.open(filename, mode='rt'):
         parts = line.strip().split('\t')
         co2causes[parts[0]].add(parts[1])
         causes.add(parts[1])
+        company_words |= set(do_tokenize(parts[0]))
     return co2causes, causes
 
 
@@ -61,15 +67,26 @@ def print_top_words(vectorizer, clf, class_labels, n=10):
               " ".join(feature_names[j] for j in topn)))
 
 
+def do_tokenize(s):
+    s = punct_re.sub(' ', s.lower())
+    s = re.sub('\s+', ' ', s)
+    return s.strip().split()
+
+
+def tokenize(s):
+    global company_words
+    toks = do_tokenize(s)
+    return [t for t in toks if t not in company_words]
+
+
 if (__name__ == '__main__'):
     company2causes, causes = read_causes(args.causes)
     print 'read %d companies with causes' % len(company2causes.keys())
     company2page = read_pages(args.homepages, company2causes)
     print 'read %d homepages' % len(company2causes.keys())
     companies = company2page.keys()
-    pipeline = CountVectorizer()
+    pipeline = CountVectorizer(tokenizer=tokenize)
     X = pipeline.fit_transform([company2page[c] for c in companies])
-
     # convert labels to multilabel format
     Y = np.array([list(company2causes[c]) for c in companies])
     N = len(Y)
