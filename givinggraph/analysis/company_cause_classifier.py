@@ -7,6 +7,7 @@ donations of $1M or more from companies to causes."""
 import argparse
 from collections import defaultdict
 import io
+import logging
 import re
 import string
 
@@ -20,20 +21,9 @@ from sklearn.multiclass import OneVsRestClassifier
 from sklearn.preprocessing import LabelBinarizer, LabelEncoder
 from sklearn.svm import LinearSVC
 
-ap = argparse.ArgumentParser(description=__doc__,
-                             formatter_class=argparse.RawTextHelpFormatter)
-ap.add_argument('--homepages',
-                metavar='HOMEPAGES',
-                default='company_pages.tsv',
-                help='file in format company_name<TAB>web_text')
-ap.add_argument('--causes',
-                metavar='CAUSES',
-                default='company_causes.tsv',
-                help='file in format company_name<TAB>cause . Note that companies may appear more than once.')
 
-args = ap.parse_args()
-punct_re = re.compile('[%s]' % re.escape(string.punctuation))
 company_words = set()
+punct_re = re.compile('[%s]' % re.escape(string.punctuation))
 
 
 def read_causes(filename):
@@ -80,6 +70,18 @@ def tokenize(s):
 
 
 if (__name__ == '__main__'):
+    ap = argparse.ArgumentParser(description=__doc__,
+                                 formatter_class=argparse.RawTextHelpFormatter)
+    ap.add_argument('--homepages',
+                    metavar='HOMEPAGES',
+                    default='company_pages.tsv',
+                    help='file in format company_name<TAB>web_text')
+    ap.add_argument('--causes',
+                    metavar='CAUSES',
+                    default='company_causes.tsv',
+                    help='file in format company_name<TAB>cause . Note that companies may appear more than once.')
+    args = ap.parse_args()
+
     company2causes, causes = read_causes(args.causes)
     print 'read %d companies with causes' % len(company2causes.keys())
     company2page = read_pages(args.homepages, company2causes)
