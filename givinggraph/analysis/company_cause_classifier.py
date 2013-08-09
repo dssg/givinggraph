@@ -2,12 +2,12 @@
 train a model based on the data at milliondollarlist.org, which posts
 donations of $1M or more from companies to causes."""
 
-# FIXME: remove company names from web text to make this generalize.
+# FIXME: read/write from database.
+# FIXME: save/load classifier
 
 import argparse
 from collections import defaultdict
 import io
-import logging
 import re
 import string
 
