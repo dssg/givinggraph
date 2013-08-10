@@ -19,7 +19,7 @@ $ python -m givinggraph.tasks
 The worker task will print all the log messages. This is useful for seeing the
 order in which tasks are actually executed.
 
-FIXME: Add calls to all the other parts of the pipeline (news, twitter, etc)
+FIXME: Add calls to all the other parts of the pipeline (homepages, community detection, etc)
 FIXME: The REST api will be the one calling this in the future.
 """
 import csv
@@ -265,4 +265,4 @@ def add_similarity_scores_for_nonprofit_tweets():
 
 
 if __name__ == '__main__':
-    print process_ein('52-1693387')  # WWF
+    print add_new_nonprofit('52-1693387')  # WWF

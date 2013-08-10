@@ -6,7 +6,7 @@ def get_tweets_by_id(user_id, include_retweets, since_id=0):
     params = {'user_id': user_id,
               'include_rts': include_retweets,
               'since_id': since_id}
-    return __get_tweets__(params)
+    return __get_tweets(params)
 
 
 def get_tweets_by_name(screen_name, include_retweets, since_id=0):
@@ -14,10 +14,10 @@ def get_tweets_by_name(screen_name, include_retweets, since_id=0):
     params = {'screen_name': screen_name,
               'include_rts': include_retweets,
               'since_id': since_id}
-    return __get_tweets__(params)
+    return __get_tweets(params)
 
 
-def __get_tweets__(params):
+def __get_tweets(params):
     """Takes a Twitter user id (a string) or screen name as input (screen_name takes precedent) and returns all of that user's tweets, going back as far as the API will let you."""
     base_url = 'https://api.twitter.com/1.1/statuses/user_timeline.json'
     params['count'] = 200
