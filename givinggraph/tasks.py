@@ -147,18 +147,25 @@ def update_null_nonprofit_twitter_ids():
 def get_tweets_for_nonprofit(nonprofit):
     """Retrieve tweets for the given nonprofit and store them in the DB."""
     logger.debug('Inside get_tweets_for_nonprofit(nonprofit) for nonprofits_id {0}'.format(nonprofit.nonprofits_id))
+    tweets = []
+    # TODO: get max ID of the nonprofit's tweets so we can pass it to get_tweets_by_id and get_tweets_by_name
     if nonprofit.twitter_id is not None:
-        givinggraph.twitter.tweets.get_tweets_by_id(nonprofit.twitter_id, True)
+        tweets = givinggraph.twitter.tweets.get_tweets_by_id(nonprofit.twitter_id, True)
     elif nonprofit.twitter_name is not None:
-        givinggraph.twitter.tweets.get_tweets_by_name(nonprofit.twitter_name, True)
+        tweets = givinggraph.twitter.tweets.get_tweets_by_name(nonprofit.twitter_name, True)
     else:
         pass
-
+    # TODO: if tweets is not empty, write it to the DB
 
 @celery.task(name='tasks.get_followers_for_nonprofit')
 def get_followers_for_nonprofit(nonprofit):
     """Retrieve followers for the given nonprofit and store them in the DB."""
     logger.debug('Inside get_followers_for_nonprofit(nonprofit) for nonprofits_id {0}'.format(nonprofit.nonprofits_id))
+    if nonprofit.twitter_id is not None:
+        follower_ids = givinggraph.twitter.users.get_followers(nonprofit.twitter_id)
+        # TODO: delete existing follower IDs from the table and write new list of follower IDs to DB
+    else:
+        pass
 
 
 @celery.task(name='tasks.find_similarity_scores_for_followers')
