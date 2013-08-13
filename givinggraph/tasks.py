@@ -157,6 +157,7 @@ def get_tweets_for_nonprofit(nonprofit):
         pass
     # TODO: if tweets is not empty, write it to the DB
 
+
 @celery.task(name='tasks.get_followers_for_nonprofit')
 def get_followers_for_nonprofit(nonprofit):
     """Retrieve followers for the given nonprofit and store them in the DB."""
