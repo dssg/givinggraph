@@ -2,6 +2,7 @@ from givinggraph import config
 from sqlalchemy import create_engine, Column, String, Integer, Float, DateTime, ForeignKey, Table
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker as sessionmakermaker, relationship
+from sqlalchemy import orm, MetaData
 
 host = config.read_config('database', 'host')
 db_name = config.read_config('database', 'database')
@@ -117,3 +118,24 @@ class Nonprofits_Similarity_By_Tweets(Base):
         self.twitter_name1 = twitter_name1
         self.twitter_name2 = twitter_name2
         self.similarity = similarity
+
+
+class Nonprofit_Twitter_Attributes(Base):
+    __tablename__ = 'nonprofit_twitter_attributes'
+    nonprofit_twitter_attributes_id = Column(Integer, primary_key=True)
+    nonprofit_id = Column(Integer)
+    id = Column(String)
+    label = Column(String)
+    weighted_degree = Column(Integer)
+    eccentricity = Column(Integer)
+    closeness_centrality = Column(Float)
+    betweenness_centrality = Column(Float)
+    modularity_class = Column(Integer)
+    authority = Column(Float)
+    hub = Column(Float)
+    clustering_coefficient = Column(Float)
+    number_of_triangles = Column(Integer)
+    weighted_clustering_coefficient = Column(Float)
+    strength = Column(Integer)
+    eigenvector_centrality = Column(Float)
+    number_of_followers = Column(Integer)

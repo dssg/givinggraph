@@ -39,7 +39,7 @@ setup(
     ],
     entry_points={
         'console_scripts': [
-            'givinggraph-ui = givinggraph.ui:main',
+            'givinggraph-api = givinggraph.api.app:main',
         ],
     },
     tests_require=[
