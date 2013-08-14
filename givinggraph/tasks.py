@@ -275,9 +275,16 @@ def add_similarity_scores_for_nonprofit_tweets():
 
 def show_topics_for_tweets():
     print 'Retrieving tweets...'
-    tweets = DBSession.query(Tweet.text).all()
+    tweets = DBSession.query(Tweet).all()
+    dict = {}
+    for tweet in tweets:
+        if tweet.twitter_name in dict:
+            dict[tweet.twitter_name] += tweet.text
+        else:
+            dict[tweet.twitter_name] = tweet.text
+
     print 'Getting topics...'
-    lda.get_topics(tweets)
+    lda.get_topics(dict.values())
 
 
 if __name__ == '__main__':
