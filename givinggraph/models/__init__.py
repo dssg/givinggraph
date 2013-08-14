@@ -145,7 +145,7 @@ class Tweet(Base):
     __tablename__ = 'nonprofits_tweets'
     nonprofits_tweets_id = Column(Integer, primary_key=True)
     twitter_name = Column(String)
-    twitter_id = Column(Integer)
+    tweet_id = Column(Integer)
     date = Column(DateTime)
     text = Column(String)
     language = Column(String)
