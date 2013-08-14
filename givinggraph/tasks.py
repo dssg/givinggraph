@@ -24,6 +24,7 @@ FIXME: The REST api will be the one calling this in the future.
 """
 import csv
 import sys
+import givinggraph.analysis.lda as lda
 import givinggraph.analysis.similarity as similarity
 import givinggraph.guidestar.search
 import givinggraph.news.searcher as news_searcher
@@ -34,7 +35,7 @@ import givinggraph.yahoo.search
 from celery import Celery
 from celery import chain, group
 from celery.utils.log import get_task_logger
-from givinggraph.models import DBSession, Nonprofit, Company, News_Article, Nonprofits_Similarity_By_Description, Nonprofits_Similarity_By_Tweets
+from givinggraph.models import DBSession, Nonprofit, Company, News_Article, Nonprofits_Similarity_By_Description, Nonprofits_Similarity_By_Tweets, Tweet
 
 'This is the extent of the celery configuration!'
 celery = Celery('tasks',
@@ -270,6 +271,13 @@ def add_similarity_scores_for_nonprofit_tweets():
     print 'Writing nonprofit tweet similarities to DB...'
     DBSession.commit()
     print 'Done writing nonprofit tweet similarities to DB.'
+
+
+def show_topics_for_tweets():
+    print 'Retrieving tweets...'
+    tweets = DBSession.query(Tweet.text).all()
+    print 'Getting topics...'
+    lda.get_topics(tweets)
 
 
 if __name__ == '__main__':

@@ -139,3 +139,22 @@ class Nonprofit_Twitter_Attributes(Base):
     strength = Column(Integer)
     eigenvector_centrality = Column(Float)
     number_of_followers = Column(Integer)
+
+
+class Tweet(Base):
+    __tablename__ = 'nonprofits_tweets'
+    nonprofits_tweets_id = Column(Integer, primary_key=True)
+    twitter_name = Column(String)
+    twitter_id = Column(Integer)
+    date = Column(DateTime)
+    text = Column(String)
+    language = Column(String)
+    retweet_count = Column(Integer)
+    favorite_count = Column(Integer)
+    mentions_ids = Column(String)
+    mentions_names = Column(String)
+    hashtags = Column(String)
+    urls = Column(String)
+    in_reply_to_screen_name = Column(String)
+    in_reply_to_user_id = Column(Integer)
+    in_reply_to_status_id = Column(Integer)
