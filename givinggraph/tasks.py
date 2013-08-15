@@ -22,8 +22,6 @@ order in which tasks are actually executed.
 FIXME: Add calls to all the other parts of the pipeline (homepages, community detection, etc)
 FIXME: The REST api will be the one calling this in the future.
 """
-import csv
-import sys
 import givinggraph.analysis.lda as lda
 import givinggraph.analysis.similarity as similarity
 import givinggraph.guidestar.search
@@ -36,6 +34,7 @@ from celery import Celery
 from celery import chain, group
 from celery.utils.log import get_task_logger
 from givinggraph.models import DBSession, Nonprofit, Company, News_Article, Nonprofits_Similarity_By_Description, Nonprofits_Similarity_By_Tweets, Tweet
+from sqlalchemy import func
 
 'This is the extent of the celery configuration!'
 celery = Celery('tasks',
@@ -257,13 +256,9 @@ def add_similarity_scores_for_nonprofit_tweets():
     logger.debug('Inside add_similarity_scores_for_nonprofit_tweets()')
 
     # nonprofits = DBSession.query(Nonprofit).filter(Nonprofit.description != None).all()  # nopep8
-    # TODO: replace CSV reading with a DB call
     rows = []
-    csv.field_size_limit(sys.maxsize)
-    with open('/mnt/data1/Case/twitter_charities_data/tweets_of_charities/charities_csv_tweets_to_cluster.csv', 'rb') as tweets_file:
-        reader = csv.reader(tweets_file, delimiter=';')
-        rows = [row for row in reader]
-    similarity_matrix = similarity.get_similarity_scores_all_pairs([row[1] for row in rows])
+    tweets = DBSession.query(Tweet.twitter_name, func.group_concat(Tweet.text).label('text')).group_by(Tweet.twitter_name).all()
+    similarity_matrix = similarity.get_similarity_scores_all_pairs([tweet.text for tweet in tweets])
 
     for m in xrange(len(similarity_matrix) - 1):
         for n in xrange(m + 1, len(similarity_matrix)):
@@ -275,16 +270,9 @@ def add_similarity_scores_for_nonprofit_tweets():
 
 def show_topics_for_tweets():
     print 'Retrieving tweets...'
-    tweets = DBSession.query(Tweet).all()
-    dict = {}
-    for tweet in tweets:
-        if tweet.twitter_name in dict:
-            dict[tweet.twitter_name] += tweet.text
-        else:
-            dict[tweet.twitter_name] = tweet.text
-
+    user_rows = DBSession.query(func.group_concat(Tweet.text).label('tweets')).group_by(Tweet.twitter_name).all()
     print 'Getting topics...'
-    lda.get_topics(dict.values())
+    lda.get_topics([user_row.tweets for user_row in user_rows])
 
 
 if __name__ == '__main__':
