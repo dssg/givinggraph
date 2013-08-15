@@ -255,14 +255,12 @@ def add_similarity_scores_for_nonprofit_tweets():
     """Calculate similarity scores for every pair of nonprofit tweets and store them in the DB."""
     logger.debug('Inside add_similarity_scores_for_nonprofit_tweets()')
 
-    # nonprofits = DBSession.query(Nonprofit).filter(Nonprofit.description != None).all()  # nopep8
-    rows = []
     tweets = DBSession.query(Tweet.twitter_name, func.group_concat(Tweet.text).label('text')).group_by(Tweet.twitter_name).all()
     similarity_matrix = similarity.get_similarity_scores_all_pairs([tweet.text for tweet in tweets])
 
     for m in xrange(len(similarity_matrix) - 1):
         for n in xrange(m + 1, len(similarity_matrix)):
-            DBSession.add(Nonprofits_Similarity_By_Tweets(rows[m][0], rows[n][0], similarity_matrix[m][n]))
+            DBSession.add(Nonprofits_Similarity_By_Tweets(tweets[m].twitter_name, rows[n].twitter_name, similarity_matrix[m][n]))
     print 'Writing nonprofit tweet similarities to DB...'
     DBSession.commit()
     print 'Done writing nonprofit tweet similarities to DB.'
