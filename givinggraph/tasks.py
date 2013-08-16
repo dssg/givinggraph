@@ -267,10 +267,15 @@ def add_similarity_scores_for_nonprofit_tweets():
 
 
 def show_topics_for_tweets():
+    twitter_names = [row.twitter_name for row in DBSession.query(Tweet.twitter_name).group_by(Tweet.twitter_name).all()]
+    tweets = []
     print 'Retrieving tweets...'
-    user_rows = DBSession.query(func.group_concat(Tweet.text).label('tweets')).group_by(Tweet.twitter_name).all()
+    for tweet_user in tweet_user_rows:
+        tweet_text = [row.text for row in DBSession.query(Tweet.text).filter(Tweet.twitter_name == tweet_user).all()]
+        tweets.append('\n'.join(tweet_text))
+
     print 'Getting topics...'
-    lda.get_topics([user_row.tweets for user_row in user_rows])
+    lda.get_topics(tweets)
 
 
 if __name__ == '__main__':
