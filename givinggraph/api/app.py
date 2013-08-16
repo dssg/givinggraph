@@ -77,6 +77,10 @@ def similarity():
         query = 'call  from_nonprofit_id_to_similar_charities_by_tweets(%d, %d)' % (int(request.args.get('id')),top)
         result = DBSession.execute(query)
         return json.dumps(procedure_to_json(result))
+    elif(attr == 'followers'):
+        query = 'call  from_nonprofit_id_to_similar_charities_by_followers(%d, %d)' % (int(request.args.get('id')),top)
+        result = DBSession.execute(query)
+        return json.dumps(procedure_to_json(result))
 
 
 
