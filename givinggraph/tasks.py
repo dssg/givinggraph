@@ -270,8 +270,8 @@ def show_topics_for_tweets():
     twitter_names = [row.twitter_name for row in DBSession.query(Tweet.twitter_name).group_by(Tweet.twitter_name).all()]
     tweets = []
     print 'Retrieving tweets...'
-    for tweet_user in tweet_user_rows:
-        tweet_text = [row.text for row in DBSession.query(Tweet.text).filter(Tweet.twitter_name == tweet_user).all()]
+    for tweet_name in twitter_names:
+        tweet_text = [row.text for row in DBSession.query(Tweet.text).filter(Tweet.twitter_name == tweet_name).all()]
         tweets.append('\n'.join(tweet_text))
 
     print 'Getting topics...'
