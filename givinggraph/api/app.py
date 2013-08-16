@@ -62,7 +62,7 @@ def by_ntee(ntee_code):
 
 @app.route('/similarity')
 def similarity():
-    """Return the top 10 similar nonprofits given a metric."""
+    """Return the most similar nonprofits given a nonprofits and a metric."""
     top =  10 if request.args.get('top') is None else int(request.args.get('top'))
     attr = request.args.get('attr')
     if(attr == 'description'):
@@ -82,6 +82,12 @@ def similarity():
         result = DBSession.execute(query)
         return json.dumps(procedure_to_json(result))
 
+@app.route('/graph_stats')
+def graph_stats():
+    """Return the SNA indexes given a nonprofit"""
+    query = 'call  from_nonprofit_id_to_sna(%d)' % int(request.args.get('id'))
+    result = DBSession.execute(query)
+    return json.dumps(procedure_to_json(result))
 
 
 if __name__ == '__main__':
