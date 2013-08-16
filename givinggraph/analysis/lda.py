@@ -27,14 +27,27 @@ def __get_topic_model(texts):
 
 
 def __tokenize_text(text):
-    """Convert text to lowercase, replace periods and commas, and split it into a list.
+    """Convert text to lowercase, replace punctuation, remove words that are two character or less, and split the resulting string into a list.
     >>> __tokenize_text('hi. I am, a, sentence.')
-    ['hi', 'i', 'am', 'a', 'sentence']
+    ['sentence']
     """
-    return text.lower().replace(',', '').replace('.', '').split()
+
+    text = text.lower()
+    
+    punctuation = ',.<>:;"\'~`@#^*()-_+=|\\'
+    for p in punctuation:
+        text = text.replace(p, ' ')
+    
+    words = text.split()
+    final_list = []
+    for word in words:
+        if len(word) > 2:
+            final_list.append(word)
+
+    return final_list
 
 
 def __get_stop_words():
     stop_words = stopwords.words('english')
-    stop_words.extend(['rt', 'its', "it's", 'great', 'thank', 'thanks', 'like', '&amp;', '@', 'pls', 'us', 'via', '&', 'get', '-', '|', 'please'])
+    stop_words.extend(['rt', 'its', "it's", 'great', 'thank', 'thanks', 'like', '&amp;', 'pls', 'us', 'via', '&', 'get', 'please'])
     return stop_words
