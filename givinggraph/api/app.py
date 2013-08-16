@@ -99,5 +99,13 @@ def twitter():
     return json.dumps(procedure_to_json(result))
 
 
+@app.route('/sector_summary')
+def sector_summary():
+    """Return the SNA indexes given a nonprofit"""
+    query = "call  sector_summary('%s')" % request.args.get('ntee')
+    result = DBSession.execute(query)
+    return json.dumps(procedure_to_json(result))
+
+
 if __name__ == '__main__':
     app.run(debug=True)
