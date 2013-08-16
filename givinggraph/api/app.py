@@ -63,29 +63,38 @@ def by_ntee(ntee_code):
 @app.route('/similarity')
 def similarity():
     """Return the most similar nonprofits given a nonprofits and a metric."""
-    top =  10 if request.args.get('top') is None else int(request.args.get('top'))
+    top = 10 if request.args.get('top') is None else int(request.args.get('top'))
     attr = request.args.get('attr')
     if(attr == 'description'):
-        query = 'call  from_nonprofit_id_to_similar_charities_by_description(%d, %d)' % (int(request.args.get('id')),top)
+        query = 'call  from_nonprofit_id_to_similar_charities_by_description(%d, %d)' % (int(request.args.get('id')), top)
         result = DBSession.execute(query)
         return json.dumps(procedure_to_json(result))
     elif(attr == 'homepage'):
-        query = 'call  from_nonprofit_id_to_similar_charities_by_homepage(%d, %d)' % (int(request.args.get('id')),top)
+        query = 'call  from_nonprofit_id_to_similar_charities_by_homepage(%d, %d)' % (int(request.args.get('id')), top)
         result = DBSession.execute(query)
         return json.dumps(procedure_to_json(result))
     elif(attr == 'tweets'):
-        query = 'call  from_nonprofit_id_to_similar_charities_by_tweets(%d, %d)' % (int(request.args.get('id')),top)
+        query = 'call  from_nonprofit_id_to_similar_charities_by_tweets(%d, %d)' % (int(request.args.get('id')), top)
         result = DBSession.execute(query)
         return json.dumps(procedure_to_json(result))
     elif(attr == 'followers'):
-        query = 'call  from_nonprofit_id_to_similar_charities_by_followers(%d, %d)' % (int(request.args.get('id')),top)
+        query = 'call  from_nonprofit_id_to_similar_charities_by_followers(%d, %d)' % (int(request.args.get('id')), top)
         result = DBSession.execute(query)
         return json.dumps(procedure_to_json(result))
+
 
 @app.route('/graph_stats')
 def graph_stats():
     """Return the SNA indexes given a nonprofit"""
     query = 'call  from_nonprofit_id_to_sna(%d)' % int(request.args.get('id'))
+    result = DBSession.execute(query)
+    return json.dumps(procedure_to_json(result))
+
+
+@app.route('/twitter')
+def twitter():
+    """Return the SNA indexes given a nonprofit"""
+    query = 'call  from_nonprofit_id_to_twitter(%d)' % int(request.args.get('id'))
     result = DBSession.execute(query)
     return json.dumps(procedure_to_json(result))
 
