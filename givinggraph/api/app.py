@@ -87,7 +87,7 @@ def graph_stats():
 
 @app.route('/twitter')
 def twitter():
-    """Return the SNA indexes given a nonprofit"""
+    """Return twitter-realted information given a nonprofit"""
     query = 'call  from_nonprofit_id_to_twitter(%d)' % int(request.args.get('id'))
     result = DBSession.execute(query)
     return json.dumps(procedure_to_json(result))
@@ -105,11 +105,11 @@ def sector_summary():
 def related_companies():
     """Return the SNA indexes given a nonprofit"""
     attr = request.args.get('attr')
-    if(attr == 'description'):
-        query = "call  sector_summary('%s')" % request.args.get('ntee')
-    
+    if(attr == 'tweets'):
+        query = "call  from_id_to_companies_by_tweets('%d')" % int(request.args.get('id'))
+
     result = DBSession.execute(query)
-    return json.dumps(procedure_to_json(result))    
+    return json.dumps(procedure_to_json(result))
 
 
 if __name__ == '__main__':
