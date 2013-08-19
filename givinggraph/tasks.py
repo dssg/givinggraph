@@ -225,7 +225,7 @@ def add_nonprofit_company_news_article_connections(articles, companies):
     logger.debug('Inside add_nonprofit_company_news_article_connections(news_articles, companies)')
     for article in articles:
         for company in companies:
-            for mention in news_parser.get_company_mentions_in_text(article.body, company.name.encode('utf-8')):
+            for mention in news_parser.get_company_mentions_in_text(article.text, company.name.encode('utf-8')):
                 if news_parser.contains_supportive_wording(mention):
                     article.companies.append(company)
                     break
