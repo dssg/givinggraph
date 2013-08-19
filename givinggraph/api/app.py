@@ -67,20 +67,14 @@ def similarity():
     attr = request.args.get('attr')
     if(attr == 'description'):
         query = 'call  from_nonprofit_id_to_similar_charities_by_description(%d, %d)' % (int(request.args.get('id')), top)
-        result = DBSession.execute(query)
-        return json.dumps(procedure_to_json(result))
     elif(attr == 'homepage'):
         query = 'call  from_nonprofit_id_to_similar_charities_by_homepage(%d, %d)' % (int(request.args.get('id')), top)
-        result = DBSession.execute(query)
-        return json.dumps(procedure_to_json(result))
     elif(attr == 'tweets'):
         query = 'call  from_nonprofit_id_to_similar_charities_by_tweets(%d, %d)' % (int(request.args.get('id')), top)
-        result = DBSession.execute(query)
-        return json.dumps(procedure_to_json(result))
     elif(attr == 'followers'):
         query = 'call  from_nonprofit_id_to_similar_charities_by_followers(%d, %d)' % (int(request.args.get('id')), top)
-        result = DBSession.execute(query)
-        return json.dumps(procedure_to_json(result))
+    result = DBSession.execute(query)
+    return json.dumps(procedure_to_json(result))
 
 
 @app.route('/graph_stats')
@@ -105,6 +99,17 @@ def sector_summary():
     query = "call  sector_summary('%s')" % request.args.get('ntee')
     result = DBSession.execute(query)
     return json.dumps(procedure_to_json(result))
+
+
+@app.route('/related_companies')
+def related_companies():
+    """Return the SNA indexes given a nonprofit"""
+    attr = request.args.get('attr')
+    if(attr == 'description'):
+        query = "call  sector_summary('%s')" % request.args.get('ntee')
+    
+    result = DBSession.execute(query)
+    return json.dumps(procedure_to_json(result))    
 
 
 if __name__ == '__main__':
