@@ -48,16 +48,16 @@ def add_new_nonprofit(ein):
     # lookup guidestar info before doing anything else.
     nonprofit = add_guidestar_info_to_db(ein)
 
-    twitter_chain = chain(update_nonprofit_twitter_name.si(nonprofit),
-                          group(get_tweets_for_nonprofit.si(nonprofit),
-                                get_followers_for_nonprofit.si(nonprofit)))
+    twitter_chain = chain(update_nonprofit_twitter_name.si(nonprofit.nonprofits_id),
+                          group(get_tweets_for_nonprofit.si(nonprofit.nonprofits_id),
+                                get_followers_for_nonprofit.si(nonprofit.nonprofits_id)))
 
     logger.debug('Getting companies...')
     companies = DBSession.query(Company).all()
     logger.debug('Companies retrieved.')
 
     # add_news_articles_to_db_for_nonprofit returns a list of articles, which will get passed as the 2nd argument to add_nonprofit_company_news_article_connections
-    news_chain = chain(add_news_articles_to_db_for_nonprofit.si(nonprofit),
+    news_chain = chain(add_news_articles_to_db_for_nonprofit.si(nonprofit.nonprofits_id),
                        add_nonprofit_company_news_article_connections.s(companies))
 
     return group(twitter_chain, news_chain).apply_async()
@@ -114,13 +114,15 @@ def add_guidestar_info_to_db(ein):
 
 
 @celery.task(name='tasks.update_nonprofit_twitter_name')
-def update_nonprofit_twitter_name(nonprofit):
+def update_nonprofit_twitter_name(nonprofits_id):
     """Takes the ID of a nonprofit and uses Yahoo to try to find the Twitter name for that nonprofit.
      If found, the nonprofit's entry in the DB is updated."""
-    logger.debug('Inside update_nonprofit_twitter_name(nonprofit) for nonprofits_id {0}'.format(nonprofit.nonprofits_id))
+    logger.debug('Inside update_nonprofit_twitter_name(nonprofits_id) for nonprofits_id {0}'.format(nonprofits_id))
+    nonprofit = DBSession.query(Nonprofit).get(nonprofits_id)
 
     twitter_url = givinggraph.yahoo.search.get_search_results('twitter ' + nonprofit.name)[0]
     twitter_name = None
+    print twitter_url
     if twitter_url[:11] == 'twitter.com':
         twitter_name = twitter_url[12:]
     nonprofit.twitter_name = twitter_name
@@ -146,9 +148,11 @@ def update_null_nonprofit_twitter_ids():
 
 
 @celery.task(name='tasks.get_tweets_for_nonprofit')
-def get_tweets_for_nonprofit(nonprofit):
+def get_tweets_for_nonprofit(nonprofits_id):
     """Retrieve tweets for the given nonprofit and store them in the DB."""
-    logger.debug('Inside get_tweets_for_nonprofit(nonprofit) for nonprofits_id {0}'.format(nonprofit.nonprofits_id))
+    logger.debug('Inside get_tweets_for_nonprofit(nonprofit) for nonprofits_id {0}'.format(nonprofits_id))
+    nonprofit = DBSession.query(Nonprofit).get(nonprofits_id)
+
     tweets = []
     # TODO: get max ID of the nonprofit's tweets so we can pass it to get_tweets_by_id and get_tweets_by_name
     if nonprofit.twitter_id is not None:
@@ -161,9 +165,11 @@ def get_tweets_for_nonprofit(nonprofit):
 
 
 @celery.task(name='tasks.get_followers_for_nonprofit')
-def get_followers_for_nonprofit(nonprofit):
+def get_followers_for_nonprofit(nonprofits_id):
     """Retrieve followers for the given nonprofit and store them in the DB."""
-    logger.debug('Inside get_followers_for_nonprofit(nonprofit) for nonprofits_id {0}'.format(nonprofit.nonprofits_id))
+    logger.debug('Inside get_followers_for_nonprofit(nonprofit) for nonprofits_id {0}'.format(nonprofits_id))
+    
+    nonprofit = DBSession.query(Nonprofit).get(nonprofits_id)
     if nonprofit.twitter_id is not None:
         follower_ids = givinggraph.twitter.users.get_followers(nonprofit.twitter_id)
         # TODO: delete existing follower IDs from the table and write new list of follower IDs to DB
@@ -196,11 +202,12 @@ def find_communities_for_followers():
 
 
 @celery.task(name='tasks.add_news_articles_to_db_for_nonprofit')
-def add_news_articles_to_db_for_nonprofit(nonprofit):
+def add_news_articles_to_db_for_nonprofit(nonprofits_id):
     """Searches the web for news articles related to the nonprofit and stores them in the DB. Returns the news articles found."""
-    logger.debug('Inside add_news_articles_to_db_for_nonprofit(nonprofit) for nonprofits_id {0}'.format(nonprofit.nonprofits_id))
+    logger.debug('Inside add_news_articles_to_db_for_nonprofit(nonprofit) for nonprofits_id {0}'.format(nonprofits_id))
+    nonprofit = DBSession.query(Nonprofit).get(nonprofits_id)
 
-    query = DBSession.query(News_Article).filter(News_Article.nonprofits_id == nonprofit.nonprofits_id)
+    query = DBSession.query(News_Article).filter(News_Article.nonprofits_id == nonprofits_id)
     already_retrieved_urls = [news_article.url for news_article in query.all()]
     news_articles = []
     for article in news_searcher.find_news_articles(nonprofit.name, urls_to_ignore=already_retrieved_urls):
@@ -211,7 +218,7 @@ def add_news_articles_to_db_for_nonprofit(nonprofit):
 
 
 @celery.task(name='tasks.add_nonprofit_company_news_article_connections')
-def add_nonprofit_company_news_article_connections(companies, articles):
+def add_nonprofit_company_news_article_connections(articles, companies):
     """Takes a list of News_Article instances and a list of Company objects as input. If any of
     the articles contain a company name, a link is made in the DB between the article and the company."""
     logger.debug('Inside add_nonprofit_company_news_article_connections(news_articles, companies)')
