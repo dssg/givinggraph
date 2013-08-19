@@ -107,6 +107,8 @@ def related_companies():
     attr = request.args.get('attr')
     if attr == 'description':
         query = "call  from_id_to_companies_by_desc('%d')" % int(request.args.get('id'))
+    elif attr == 'homepage':
+        query = "call  from_id_to_companies_by_home('%d')" % int(request.args.get('id'))
     elif attr == 'tweets':
         query = "call  from_id_to_companies_by_tweets('%d')" % int(request.args.get('id'))
 
