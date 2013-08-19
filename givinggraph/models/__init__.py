@@ -2,7 +2,6 @@ from givinggraph import config
 from sqlalchemy import create_engine, Column, String, Integer, Float, DateTime, ForeignKey, Table
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker as sessionmakermaker, relationship
-from sqlalchemy import orm, MetaData
 
 host = config.read_config('database', 'host')
 db_name = config.read_config('database', 'database')
