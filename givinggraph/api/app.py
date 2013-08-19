@@ -97,7 +97,49 @@ def sector_summary():
     """Return the summary of a given NTEE code"""
     query = "call  sector_summary('%s')" % request.args.get('ntee')
     result = DBSession.execute(query)
-    return json.dumps(procedure_to_json(result))
+    my_dict = procedure_to_json(result)
+
+    nonprofits = my_dict['results']
+
+    result = {
+        'avg_closeness_centrality': 0,
+        'avg_clustering_coefficient': 0,
+        'avg_degree': 0,
+        'avg_hubAuth': 0,
+        'avg_weighted_degree': 0,
+        'avg_eccentricity': 0,
+        'avg_clustering_coefficient': 0
+    }
+
+    tw_communities = {}
+    web_communities = {}
+    desc_communities = {}
+
+    for nonprofit in nonprofits:
+        result['avg_closeness_centrality'] += nonprofit['closeness_centrality'] / float(len(nonprofits))
+        result['avg_clustering_coefficient'] += nonprofit['clustering_coefficient'] / float(len(nonprofits))
+        result['avg_degree'] += nonprofit['degree'] / float(len(nonprofits))
+        result['avg_hubAuth'] += nonprofit['hubAuth'] / float(len(nonprofits))
+        result['avg_weighted_degree'] += nonprofit['weighted_degree'] / float(len(nonprofits))
+        result['avg_eccentricity'] += nonprofit['eccentricity'] / float(len(nonprofits))
+        result['avg_clustering_coefficient'] += nonprofit['clustering_coefficient'] / float(len(nonprofits))
+        if nonprofit['tw_community'] not in tw_communities:
+            tw_communities[nonprofit['tw_community']] = 0
+        else:
+            tw_communities[nonprofit['tw_community']] += 1
+        result['tw_communities'] = tw_communities
+        if nonprofit['web_community'] not in web_communities:
+            web_communities[nonprofit['web_community']] = 0
+        else:
+            web_communities[nonprofit['web_community']] += 1
+        result['web_communities'] = web_communities
+        if nonprofit['desc_community'] not in desc_communities:
+            desc_communities[nonprofit['desc_community']] = 0
+        else:
+            desc_communities[nonprofit['desc_community']] += 1
+        result['desc_communities'] = desc_communities
+
+    return json.dumps(result)
 
 
 @app.route('/possible_partners')
