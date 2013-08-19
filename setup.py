@@ -33,6 +33,7 @@ setup(
         # 'matplotlib', # ignoring for now to see if travis stops complaining
         'networkx',
         'sqlalchemy',
+        'scikit-learn',
     ],
     dependency_links=[
         'http://github.com/grangier/python-goose/tarball/master/#egg=goose-extractor-1.0.1'
