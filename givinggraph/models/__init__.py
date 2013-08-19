@@ -157,3 +157,18 @@ class Tweet(Base):
     in_reply_to_screen_name = Column(String)
     in_reply_to_user_id = Column(Integer)
     in_reply_to_status_id = Column(Integer)
+
+    def __init__(self, twitter_name, tweet_id, date, text, language, retweet_count, favorite_count, mentions_ids, mentions_names, hashtags, urls, in_reply_to_screen_name, in_reply_to_user_id, in_reply_to_status_id):
+        self.tweet_id = tweet_id
+        self.date = date
+        self.text = text
+        self.language = language
+        self.retweet_count = retweet_count
+        self.favorite_count = favorite_count
+        self.mentions_ids = mentions_ids
+        self.mentions_names = mentions_names
+        self.hashtags = hashtags
+        self.urls = urls
+        self.in_reply_to_screen_name = in_reply_to_screen_name
+        self.in_reply_to_user_id = in_reply_to_user_id
+        self.in_reply_to_status_id = in_reply_to_status_id
