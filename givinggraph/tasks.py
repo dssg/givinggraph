@@ -121,8 +121,9 @@ def update_nonprofit_twitter_name(nonprofits_id):
     nonprofit = DBSession.query(Nonprofit).get(nonprofits_id)
 
     twitter_url = givinggraph.yahoo.search.get_search_results('twitter ' + nonprofit.name)[0]
+    twitter_url = twitter_url.replace('http://', '').replace('https://', '')
     twitter_name = None
-    print twitter_url
+
     if twitter_url[:11] == 'twitter.com':
         twitter_name = twitter_url[12:]
     nonprofit.twitter_name = twitter_name
