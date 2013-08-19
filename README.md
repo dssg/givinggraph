@@ -5,7 +5,7 @@ A tool to help understand the relationships between non-profits, for-profits, an
 GivingGraph is a project of the 2013 [Data Science for Social Good](http://dssg.io) fellowship, in partnership with the [Case Foundation](http://casefoundation.org). The Giving Graph concept [was introduced by the Case Foundation](http://casefoundation.org/blog/how-new-type-social-graph-could-change-philanthropy) in early 2013.
 
 
-## Problem
+## The Problem
 
 Three critical activities for nonprofits are fundraising, attracting volunteers, and forming partnerships. Strategies for achieving these aims vary widely across sectors, but there is little collaboration among nonprofits. In short, nonprofits aren't learning as much from each other as they could. There's too much information out there on non-profits scattered across the web, in charity databases, in news articles, in social media, in sources organized and unorganized.
 
@@ -19,7 +19,7 @@ GivingGraph is an integration tool to help nonprofits understand their relations
 2. Which companies have partnerships with nonprofits in my sector?
 3. Which is my impact on social media and what are the characteristics of my followers?
 
-## Solution and Use Cases
+## The Solution and Use Cases
 
 Our mission, then, is to provide nonprofits and individuals with sector-wide context so that they can make better and more informed decisions. 
 
