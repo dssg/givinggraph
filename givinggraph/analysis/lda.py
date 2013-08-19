@@ -18,6 +18,7 @@ def __get_topic_model(texts):
     corpora_dict = corpora.Dictionary(texts_tokenized)
     stop_word_ids = [corpora_dict.token2id[stop_word] for stop_word in __get_stop_words() if stop_word in corpora_dict.token2id]
     corpora_dict.filter_tokens(stop_word_ids)
+    corpora_dict.filter_extremes(no_below=2, no_above=.99)
     corpora_dict.compactify()
 
     logging.debug('Done creating corpora dictionary.')
