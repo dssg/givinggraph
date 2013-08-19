@@ -65,13 +65,13 @@ def similarity():
     """Return the most similar nonprofits given a nonprofits and a metric."""
     top = 10 if request.args.get('top') is None else int(request.args.get('top'))
     attr = request.args.get('attr')
-    if(attr == 'description'):
+    if attr == 'description':
         query = 'call  from_nonprofit_id_to_similar_charities_by_description(%d, %d)' % (int(request.args.get('id')), top)
-    elif(attr == 'homepage'):
+    elif attr == 'homepage':
         query = 'call  from_nonprofit_id_to_similar_charities_by_homepage(%d, %d)' % (int(request.args.get('id')), top)
-    elif(attr == 'tweets'):
+    elif attr == 'tweets':
         query = 'call  from_nonprofit_id_to_similar_charities_by_tweets(%d, %d)' % (int(request.args.get('id')), top)
-    elif(attr == 'followers'):
+    elif attr == 'followers':
         query = 'call  from_nonprofit_id_to_similar_charities_by_followers(%d, %d)' % (int(request.args.get('id')), top)
     result = DBSession.execute(query)
     return json.dumps(procedure_to_json(result))
@@ -105,7 +105,9 @@ def sector_summary():
 def related_companies():
     """Return the SNA indexes given a nonprofit"""
     attr = request.args.get('attr')
-    if(attr == 'tweets'):
+    if attr == 'description':
+        query = "call  from_id_to_companies_by_desc('%d')" % int(request.args.get('id'))
+    elif attr == 'tweets':
         query = "call  from_id_to_companies_by_tweets('%d')" % int(request.args.get('id'))
 
     result = DBSession.execute(query)
