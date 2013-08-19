@@ -101,7 +101,7 @@ def sector_summary():
     return json.dumps(procedure_to_json(result))
 
 
-@app.route('/related_companies')
+@app.route('/possible_partners')
 def related_companies():
     """Return the possible donors given a nonprofit"""
     attr = request.args.get('attr')
