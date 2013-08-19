@@ -29,8 +29,7 @@ def procedure_to_json(result):
     items = result.fetchall()
     names = result.keys()
     result.close()
-    my_dict = {}
-    my_dict['results'] = []
+    my_dict = {'results': []}
     for i, item in enumerate(items):
         new_dict = {}
         for j, acc in enumerate(item):
@@ -111,7 +110,6 @@ def related_companies():
         query = "call  from_id_to_companies_by_home('%d')" % int(request.args.get('id'))
     elif attr == 'tweets':
         query = "call  from_id_to_companies_by_tweets('%d')" % int(request.args.get('id'))
-
     result = DBSession.execute(query)
     return json.dumps(procedure_to_json(result))
 
