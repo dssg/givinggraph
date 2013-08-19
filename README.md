@@ -38,12 +38,12 @@ Say a non-profit like WWF wants to find new partners, then we can look at their 
 
 ## Technical Approach
  
-### Structured Information: 
+### Structured Information
 GivingGraph enables you to aggregate data from structured sources such as GuideStar and CharityNavigator (with appropriate API permissions). 
  
 This step will provide information such as nonprofit name, financials, and categorization code. 
 
-### Unstructured Information:
+### Unstructured Information
 GivingGraph collects information connecting nonprofits and companies from the following sources:
 
 - **News stories**: GivingGraph uses web search APIs to gather news stories containing mentions of nonprofits, companies, and causes. Filtering is performed to reduce false matches.
