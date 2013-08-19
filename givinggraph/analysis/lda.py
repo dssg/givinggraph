@@ -24,7 +24,7 @@ def __get_topic_model(texts):
     logging.debug('Done creating corpora dictionary.')
     # gensim has us convert tokens to numeric IDs using corpora.Dictionary
     corpus = [corpora_dict.doc2bow(text_tokenized) for text_tokenized in texts_tokenized]
-    return LdaModel(corpus, id2word=corpora_dict, passes=3, num_topcs=50)
+    return LdaModel(corpus, id2word=corpora_dict, passes=3, num_topics=50)
 
 
 def __tokenize_text(text):
@@ -34,11 +34,11 @@ def __tokenize_text(text):
     """
 
     text = text.lower()
-    
+
     punctuation = ',.<>:;"\'~`@#^*()-_+=|\\/?!'
     for p in punctuation:
         text = text.replace(p, ' ')
-    
+
     words = text.split()
     final_list = []
     for word in words:
