@@ -191,11 +191,14 @@ def get_tweets_for_nonprofit(nonprofits_id):
 def get_followers_for_nonprofit(nonprofits_id):
     """Retrieve followers for the given nonprofit and store them in the DB."""
     logger.debug('Inside get_followers_for_nonprofit(nonprofit) for nonprofits_id {0}'.format(nonprofits_id))
-
     nonprofit = DBSession.query(Nonprofit).get(nonprofits_id)
     if nonprofit.twitter_id is not None:
-        follower_ids = givinggraph.twitter.users.get_followers(nonprofit.twitter_id)
-        # TODO: delete existing follower IDs from the table and write new list of follower IDs to DB
+        pass
+        # follower_ids = givinggraph.twitter.users.get_followers(nonprofit.twitter_id)
+        # DBSession.query(Nonprofits_Follower).filter(Nonprofits_Follower.nonprofit_handle == nonprofit.twitter_name).delete()
+        # for follower_id in follower_ids:
+        #     DBSession.add(Nonprofits_Follower(nonprofit.twitter_name, follower_id))
+        # DBSession.commit()
     else:
         pass
 

@@ -173,3 +173,13 @@ class Tweet(Base):
         self.in_reply_to_screen_name = in_reply_to_screen_name
         self.in_reply_to_user_id = in_reply_to_user_id
         self.in_reply_to_status_id = in_reply_to_status_id
+
+
+# class Nonprofit_Follower(Base):
+#     __tablename__ = 'nonprofits_followers'
+#     nonprofit_handle = Column(String)
+#     user_id = Column(String)
+
+#     def __init__(self, twitter_name, user_id):
+#         self.nonprofit_handle = twitter_name
+#         self.user_id = user_id
