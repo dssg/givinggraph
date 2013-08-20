@@ -144,7 +144,7 @@ class Tweet(Base):
     __tablename__ = 'nonprofits_tweets'
     nonprofits_tweets_id = Column(Integer, primary_key=True)
     twitter_name = Column(String)
-    tweet_id = Column(Integer)
+    tweet_id = Column(String)
     date = Column(DateTime)
     text = Column(String)
     language = Column(String)
@@ -155,10 +155,11 @@ class Tweet(Base):
     hashtags = Column(String)
     urls = Column(String)
     in_reply_to_screen_name = Column(String)
-    in_reply_to_user_id = Column(Integer)
+    in_reply_to_user_id = Column(String)
     in_reply_to_status_id = Column(Integer)
 
     def __init__(self, twitter_name, tweet_id, date, text, language, retweet_count, favorite_count, mentions_ids, mentions_names, hashtags, urls, in_reply_to_screen_name, in_reply_to_user_id, in_reply_to_status_id):
+        self.twitter_name = twitter_name
         self.tweet_id = tweet_id
         self.date = date
         self.text = text
