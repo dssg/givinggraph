@@ -34,7 +34,8 @@ from celery import Celery
 from celery import chain, group
 from celery.utils.log import get_task_logger
 from givinggraph.models import DBSession, Nonprofit, Company, News_Article, Nonprofits_Similarity_By_Description, Nonprofits_Similarity_By_Tweets, Tweet
-from sqlalchemy import func
+from sqlalchemy import func, Integer
+from sqlalchemy.sql.expression import cast
 
 'This is the extent of the celery configuration!'
 celery = Celery('tasks',
@@ -153,13 +154,18 @@ def get_tweets_for_nonprofit(nonprofits_id):
     """Retrieve tweets for the given nonprofit and store them in the DB."""
     logger.debug('Inside get_tweets_for_nonprofit(nonprofit) for nonprofits_id {0}'.format(nonprofits_id))
     nonprofit = DBSession.query(Nonprofit).get(nonprofits_id)
+    
+    max_tweet = DBSession.query(func.max(cast(Tweet.tweet_id, Integer)).label('max_tweet_id')).filter(Tweet.twitter_name == nonprofit.twitter_name).first()
+    if max_tweet is None:
+        max_tweet_id = 0
+    else:
+        max_tweet_id = max_tweet.max_tweet_id
 
     tweets = []
-    # TODO: get max ID of the nonprofit's tweets so we can pass it to get_tweets_by_id and get_tweets_by_name
     if nonprofit.twitter_id is not None:
-        tweets = givinggraph.twitter.tweets.get_tweets_by_id(nonprofit.twitter_id, True)
+        tweets = givinggraph.twitter.tweets.get_tweets_by_id(nonprofit.twitter_id, True, since_id=max_tweet_id)
     elif nonprofit.twitter_name is not None:
-        tweets = givinggraph.twitter.tweets.get_tweets_by_name(nonprofit.twitter_name, True)
+        tweets = givinggraph.twitter.tweets.get_tweets_by_name(nonprofit.twitter_name, True, since_id=max_tweet_id)
     else:
         pass
 
