@@ -7,7 +7,7 @@ from nltk.corpus import stopwords
 
 def get_topics(texts):
     topic_model = __get_topic_model(texts)
-    topic_model.show_topics()
+    topic_model.show_topics(topics=-1)
 
 
 def __get_topic_model(texts):
@@ -18,13 +18,13 @@ def __get_topic_model(texts):
     corpora_dict = corpora.Dictionary(texts_tokenized)
     stop_word_ids = [corpora_dict.token2id[stop_word] for stop_word in __get_stop_words() if stop_word in corpora_dict.token2id]
     corpora_dict.filter_tokens(stop_word_ids)
-    corpora_dict.filter_extremes(no_below=2, no_above=.99)
+    corpora_dict.filter_extremes(no_below=2, no_above=.5, keep_n=500000)
     corpora_dict.compactify()
 
     logging.debug('Done creating corpora dictionary.')
     # gensim has us convert tokens to numeric IDs using corpora.Dictionary
     corpus = [corpora_dict.doc2bow(text_tokenized) for text_tokenized in texts_tokenized]
-    return LdaModel(corpus, id2word=corpora_dict, passes=3, num_topics=50)
+    return LdaModel(corpus, id2word=corpora_dict, passes=100, num_topics=100)
 
 
 def __tokenize_text(text):
@@ -35,7 +35,7 @@ def __tokenize_text(text):
 
     text = text.lower()
 
-    punctuation = ',.<>:;"\'~`@#^*()-_+=|\\/?!'
+    punctuation = ',.<>:;"\'~`@#^*()-_+=|\\/?!&'
     for p in punctuation:
         text = text.replace(p, ' ')
 
@@ -50,5 +50,5 @@ def __tokenize_text(text):
 
 def __get_stop_words():
     stop_words = stopwords.words('english')
-    stop_words.extend(['rt', 'its', "it's", 'great', 'thank', 'thanks', 'like', '&amp', 'pls', 'us', 'via', '&', 'get', 'please', 'http'])
+    stop_words.extend(['rt', 'its', "it's", 'day', 'great', 'thank', 'thanks', 'like', '&amp', 'pls', 'us', 'via', 'get', 'please', 'http', 'today', 'help', 'good', 'bit', 'support'])
     return stop_words
