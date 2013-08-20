@@ -8,6 +8,7 @@ documentation.
 import json
 
 import decimal
+import datetime
 
 from flask import Flask
 
@@ -35,6 +36,8 @@ def procedure_to_json(result):
         for j, acc in enumerate(item):
             if isinstance(acc, decimal.Decimal):
                 new_dict[names[j]] = float(acc)
+            elif isinstance(acc, datetime.datetime):
+                new_dict[names[j]] = str(acc)
             else:
                 new_dict[names[j]] = acc
         my_dict['results'].append(new_dict)
@@ -142,8 +145,16 @@ def sector_summary():
     return json.dumps(result)
 
 
-@app.route('/possible_partners')
+@app.route('/related_companies')
 def related_companies():
+    """Return the companies that are mentioned with a nonprofit in news articles"""
+    query = 'call  related_companies(%d)' % int(request.args.get('id'))
+    result = DBSession.execute(query)
+    return json.dumps(procedure_to_json(result))
+
+
+@app.route('/possible_partners')
+def possible_partners():
     """Return the possible donors given a nonprofit"""
     attr = request.args.get('attr')
     if attr == 'description':
