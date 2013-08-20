@@ -156,7 +156,7 @@ class Tweet(Base):
     urls = Column(String)
     in_reply_to_screen_name = Column(String)
     in_reply_to_user_id = Column(String)
-    in_reply_to_status_id = Column(Integer)
+    in_reply_to_status_id = Column(String)
 
     def __init__(self, twitter_name, tweet_id, date, text, language, retweet_count, favorite_count, mentions_ids, mentions_names, hashtags, urls, in_reply_to_screen_name, in_reply_to_user_id, in_reply_to_status_id):
         self.twitter_name = twitter_name
