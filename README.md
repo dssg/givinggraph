@@ -52,6 +52,8 @@ Various API and database credentials are read from a configuration file. A sampl
 2. add your credentials
 3. set an environment GGRAPH_CFG to point to the file (e.g., `export GGRAPH_CFG=~/.giving`)
 
+For the full experience, you'll need credentials for [GuideStar](http://www.guidestar.org/), [Charity Navigator](http://www.charitynavigator.org/), [Twitter](http://twitter.com). Also, you'll need to launch a MySQL instance and enter your host information in the config.
+
 ### Celery Configuration
 
 GivingGraph uses Celery to schedule asynchronous tasks (like web crawling, API
@@ -70,7 +72,7 @@ python -m givinggraph.tasks
 - Feel free to create an issue for any bugs you encounter.
 - <dssg-giving@googlegroups.com>
 
-[Travis](https://travis-ci.org/dssg/givinggraph) is used for continuous testing
+[Travis](https://travis-ci.org/dssg/givinggraph) is used for continuous testing. Most of the tests are [doctests](http://docs.python.org/2/library/doctest.html).
 
 ## License
 MIT license, see [LICENSE.txt](LICENSE.txt)
