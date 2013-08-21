@@ -154,10 +154,10 @@ def get_tweets_for_nonprofit(nonprofits_id):
     """Retrieve tweets for the given nonprofit and store them in the DB."""
     logger.debug('Inside get_tweets_for_nonprofit(nonprofit) for nonprofits_id {0}'.format(nonprofits_id))
     nonprofit = DBSession.query(Nonprofit).get(nonprofits_id)
-    
+
     max_tweet = DBSession.query(func.max(cast(Tweet.tweet_id, Integer)).label('max_tweet_id')).filter(Tweet.twitter_name == nonprofit.twitter_name).first()
-    if max_tweet is None:
-        max_tweet_id = 0
+    if max_tweet is None or max_tweet.max_tweet_id is None:
+        max_tweet_id = 1
     else:
         max_tweet_id = max_tweet.max_tweet_id
 
@@ -168,19 +168,18 @@ def get_tweets_for_nonprofit(nonprofits_id):
         tweets = givinggraph.twitter.tweets.get_tweets_by_name(nonprofit.twitter_name, True, since_id=max_tweet_id)
     else:
         pass
-
     for tweet in tweets:
-        DBSession.add(Tweet(tweet['screen_name'],
+        DBSession.add(Tweet(tweet['user']['screen_name'],
                             tweet['id_str'],
                             tweet['created_at'],
-                            tweet['text'],
+                            tweet['text'].encode('utf-8'),
                             tweet['lang'],
                             tweet['retweet_count'],
                             tweet['favorite_count'],
-                            ', '.join([mention.id_str for mention in tweet['user_mentions']]),
-                            ', '.join([mention.screen_name for mention in tweet['user_mentions']]),
-                            ', '.join(tweet['hashtags']),
-                            ', '.join(tweet['urls']),
+                            ', '.join([mention['id_str'] for mention in tweet['entities']['user_mentions']]),
+                            ', '.join([mention['screen_name'] for mention in tweet['entities']['user_mentions']]),
+                            ', '.join([hashtag['text'] for hashtag in tweet['entities']['hashtags']]),
+                            ', '.join([url['expanded_url'] for url in tweet['entities']['urls']]),
                             tweet['in_reply_to_screen_name'],
                             tweet['in_reply_to_user_id_str'],
                             tweet['in_reply_to_status_id_str']))

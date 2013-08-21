@@ -1,7 +1,7 @@
 from givinggraph.twitter.common import twitter_get
 
 
-def get_tweets_by_id(user_id, include_retweets, since_id=0):
+def get_tweets_by_id(user_id, include_retweets, since_id=1):
     """Takes a Twitter user id (a string) as input and returns all of that user's tweets. If since_id is not set, it will go back as far as the API will let you."""
     params = {'user_id': user_id,
               'include_rts': include_retweets,
@@ -9,7 +9,7 @@ def get_tweets_by_id(user_id, include_retweets, since_id=0):
     return __get_tweets(params)
 
 
-def get_tweets_by_name(screen_name, include_retweets, since_id=0):
+def get_tweets_by_name(screen_name, include_retweets, since_id=1):
     """Takes a Twitter screen name as input and returns all of that user's tweets. If since_id is not set, it will go back as far as the API will let you."""
     params = {'screen_name': screen_name,
               'include_rts': include_retweets,
