@@ -5,7 +5,7 @@ This is a tool to help understand the relationships between non-profits, for-pro
 GivingGraph is a project of the 2013 [Data Science for Social Good](http://dssg.io) fellowship, in partnership with the [Case Foundation](http://casefoundation.org). The Giving Graph concept [was introduced by the Case Foundation](http://casefoundation.org/blog/how-new-type-social-graph-could-change-philanthropy) in early 2013.
 
 
-## The Problem:
+## The Problem
 
 Three critical activities for nonprofits are fundraising, attracting volunteers, and forming partnerships. Strategies for achieving these aims vary widely across sectors, but there is little collaboration among nonprofits. In short, nonprofits aren't learning as much from each other as they could. There's too much information out there on non-profits scattered across the web, in charity databases, in news articles, in social media, in sources organized and unorganized.
 
@@ -73,4 +73,4 @@ python -m givinggraph.tasks
 [Travis](https://travis-ci.org/dssg/givinggraph) is used for continuous testing
 
 ## License
-MIT license, see [LICENSE.txt]
+MIT license, see [LICENSE.txt](LICENSE.txt)
