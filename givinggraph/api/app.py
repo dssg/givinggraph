@@ -130,17 +130,17 @@ def sector_summary():
             tw_communities[nonprofit['tw_community']] = 0
         else:
             tw_communities[nonprofit['tw_community']] += 1
-        result['tw_communities'] = tw_communities
         if nonprofit['web_community'] not in web_communities:
             web_communities[nonprofit['web_community']] = 0
         else:
             web_communities[nonprofit['web_community']] += 1
-        result['web_communities'] = web_communities
         if nonprofit['desc_community'] not in desc_communities:
             desc_communities[nonprofit['desc_community']] = 0
         else:
             desc_communities[nonprofit['desc_community']] += 1
-        result['desc_communities'] = desc_communities
+    result['tw_communities'] = tw_communities
+    result['web_communities'] = web_communities
+    result['desc_communities'] = desc_communities
 
     return json.dumps(result)
 
