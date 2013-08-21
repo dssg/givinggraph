@@ -72,7 +72,7 @@ python -m givinggraph.tasks
 - Feel free to create an issue for any bugs you encounter.
 - <dssg-giving@googlegroups.com>
 
-[Travis](https://travis-ci.org/dssg/givinggraph) is used for continuous testing
+[Travis](https://travis-ci.org/dssg/givinggraph) is used for continuous testing. Most of the tests are [doctests](http://docs.python.org/2/library/doctest.html).
 
 ## License
 MIT license, see [LICENSE.txt](LICENSE.txt)
