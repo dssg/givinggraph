@@ -22,6 +22,7 @@ order in which tasks are actually executed.
 FIXME: Add calls to all the other parts of the pipeline (homepages, community detection, etc)
 FIXME: The REST api will be the one calling this in the future.
 """
+import csv
 import givinggraph.analysis.lda as lda
 import givinggraph.analysis.similarity as similarity
 import givinggraph.guidestar.search
@@ -30,6 +31,7 @@ import givinggraph.news.parser as news_parser
 import givinggraph.twitter.tweets
 import givinggraph.twitter.users
 import givinggraph.yahoo.search
+import time
 from celery import Celery
 from celery import chain, group
 from celery.utils.log import get_task_logger
@@ -48,6 +50,9 @@ logger = get_task_logger(__name__)
 def add_new_nonprofit(ein):
     # lookup guidestar info before doing anything else.
     nonprofit = add_guidestar_info_to_db(ein)
+    if nonprofit is None:
+        print 'Guidestar returned nothing for EIN {0}, exiting.'.format(ein)
+        return None
 
     twitter_chain = chain(update_nonprofit_twitter_name.si(nonprofit.nonprofits_id),
                           group(get_tweets_for_nonprofit.si(nonprofit.nonprofits_id),
@@ -90,6 +95,9 @@ def add_guidestar_info_to_db(ein):
     query = DBSession.query(Nonprofit).filter(Nonprofit.ein == ein)
     nonprofit_db = query.first()
     nonprofit_gs = givinggraph.guidestar.search.get_nonprofit(ein)
+    if nonprofit_gs is None:
+        return None
+
     if nonprofit_db is None:
         nonprofit_db = Nonprofit(nonprofit_gs.name,
                                  nonprofit_gs.ein,
@@ -121,7 +129,10 @@ def update_nonprofit_twitter_name(nonprofits_id):
     logger.debug('Inside update_nonprofit_twitter_name(nonprofits_id) for nonprofits_id {0}'.format(nonprofits_id))
     nonprofit = DBSession.query(Nonprofit).get(nonprofits_id)
 
-    twitter_url = givinggraph.yahoo.search.get_search_results('twitter ' + nonprofit.name)[0]
+    search_results = givinggraph.yahoo.search.get_search_results('twitter ' + nonprofit.name)
+    if len(search_results) == 0:
+        return
+    twitter_url = search_results[0]
     twitter_url = twitter_url.replace('http://', '').replace('https://', '')
     twitter_name = None
 
@@ -168,6 +179,7 @@ def get_tweets_for_nonprofit(nonprofits_id):
         tweets = givinggraph.twitter.tweets.get_tweets_by_name(nonprofit.twitter_name, True, since_id=max_tweet_id)
     else:
         pass
+
     for tweet in tweets:
         DBSession.add(Tweet(tweet['user']['screen_name'],
                             tweet['id_str'],
@@ -249,6 +261,13 @@ def add_nonprofit_company_news_article_connections(article_ids, companies):
     logger.debug('Inside add_nonprofit_company_news_article_connections(news_articles, companies)')
     for article_id in article_ids:
         article = DBSession.query(News_Article).get(article_id)
+        if article is None:
+            print '***************************'
+            print '***************************'
+            print article_id
+            print '***************************'
+            print '***************************'
+            time.sleep(180)
         for company in companies:
             for mention in news_parser.get_company_mentions_in_text(article.text, company.name.encode('utf-8')):
                 if news_parser.contains_supportive_wording(mention):
@@ -277,6 +296,7 @@ def add_similarity_scores_for_nonprofit_descriptions():
 
     nonprofits = DBSession.query(Nonprofit).filter(Nonprofit.description != None).all()  # nopep8
     similarity_matrix = similarity.get_similarity_scores_all_pairs([nonprofit.description for nonprofit in nonprofits])
+    DBSession.query(Nonprofits_Similarity_By_Description).delete()
     for m in xrange(len(similarity_matrix) - 1):
         for n in xrange(m + 1, len(similarity_matrix)):
             DBSession.add(Nonprofits_Similarity_By_Description(nonprofits[m].nonprofits_id, nonprofits[n].nonprofits_id, similarity_matrix[m][n]))
@@ -290,7 +310,7 @@ def add_similarity_scores_for_nonprofit_tweets():
 
     tweets = DBSession.query(Tweet.twitter_name, func.group_concat(Tweet.text).label('text')).group_by(Tweet.twitter_name).all()
     similarity_matrix = similarity.get_similarity_scores_all_pairs([tweet.text for tweet in tweets])
-
+    DBSession.query(Nonprofits_Similarity_By_Tweets).delete()
     for m in xrange(len(similarity_matrix) - 1):
         for n in xrange(m + 1, len(similarity_matrix)):
             DBSession.add(Nonprofits_Similarity_By_Tweets(tweets[m].twitter_name, tweets[n].twitter_name, similarity_matrix[m][n]))
@@ -311,4 +331,11 @@ def show_topics_for_tweets():
 
 
 if __name__ == '__main__':
-    print add_new_nonprofit('52-1693387')  # WWF
+    with open('c:/collaborations.csv', 'rb') as collaborations_file:
+        reader = csv.reader(collaborations_file)
+        next(reader, None)  # skip header row
+        for row in reader:
+            ein = row[2].strip()
+            ein = ein[:2] + '-' + ein[2:]
+            add_new_nonprofit(ein)
+    #print add_new_nonprofit('52-1693387')  # WWF
