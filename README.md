@@ -64,6 +64,8 @@ For the full experience, you'll need credentials for [GuideStar](http://www.guid
 
 ### Celery Configuration
 
+NOTE: Due to a race condition, Celery is not currently being used. See [issue #19](https://github.com/dssg/givinggraph/issues/19).
+
 GivingGraph uses Celery to schedule asynchronous tasks (like web crawling, API
 calls, etc). This depends on [RabbitMQ](http://www.rabbitmq.com/) to track
 tasks. RabbitMQ is available in most package installers (e.g., `brew install
