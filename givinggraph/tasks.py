@@ -48,6 +48,9 @@ logger = get_task_logger(__name__)
 
 
 def add_new_nonprofit(ein):
+    if DBSession.query(Nonprofit).filter(Nonprofit.ein == ein).first() is not None:
+        return
+
     # lookup guidestar info before doing anything else.
     nonprofit = add_guidestar_info_to_db(ein)
     if nonprofit is None:
