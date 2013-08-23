@@ -1,0 +1,6 @@
+- `scrape_bloomberg_company_names.py`: Scrape list of all publicly traded companies from Bloomberg Businessweek
+- `million_bloomberg_match.py`: Matches companies from Bloomberg to those appearing on Million Dollar List
+- `download_company_pages.py`: Queries Yahoo with company name and keyword "corporate giving, donates, supports"
+- `download_company_aboutus.py`: Queries Yahoo with company name and keyword "about us"
+- `company_cause_pickler.py`: Saves mapping between company features and causes
+- `company_cause_svm.py`: Runs company-cause classifier using pickled data from `company_cause_pickler.py`
