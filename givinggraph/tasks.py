@@ -57,13 +57,13 @@ def add_new_nonprofit(ein):
         print 'Guidestar returned nothing for EIN {0}, exiting.'.format(ein)
         return None
 
-    twitter_chain = chain(update_nonprofit_twitter_name.si(nonprofit.nonprofits_id),
-                          group(get_tweets_for_nonprofit.si(nonprofit.nonprofits_id),
-                                get_followers_for_nonprofit.si(nonprofit.nonprofits_id)))
-
     logger.debug('Getting companies...')
     companies = DBSession.query(Company).all()
     logger.debug('Companies retrieved.')
+
+    # twitter_chain = chain(update_nonprofit_twitter_name.si(nonprofit.nonprofits_id),
+    #                       group(get_tweets_for_nonprofit.si(nonprofit.nonprofits_id),
+    #                             get_followers_for_nonprofit.si(nonprofit.nonprofits_id)))
 
     # add_news_articles_to_db_for_nonprofit returns a list of articles, which will get passed as the 2nd argument to add_nonprofit_company_news_article_connections
     # NOTE: Commented out because of synchronization issue: articles passed to add_nonprofit_company_news_article_connections(...) are in the DB, but SQLAlchemy doesn't see them.
@@ -72,25 +72,38 @@ def add_new_nonprofit(ein):
     article_ids = add_news_articles_to_db_for_nonprofit(nonprofit.nonprofits_id)
     add_nonprofit_company_news_article_connections(article_ids, companies)
 
+    update_nonprofit_twitter_name(nonprofit.nonprofits_id)
+    get_tweets_for_nonprofit(nonprofit.nonprofits_id)
+    get_followers_for_nonprofit(nonprofit.nonprofits_id)
+
     #return group(twitter_chain, news_chain).apply_async()
-    return group(twitter_chain).apply_async()
 
 
 @celery.task(name='tasks.perform_aggregate_tasks')
 def perform_aggregate_tasks():
     """Several tasks operate over all nonprofits. This function will execute those tasks."""
-    tweets_chain = chain(add_similarity_scores_for_nonprofit_tweets.si(),
-                         find_communities_for_tweets.si())
-    descriptions_chain = chain(add_similarity_scores_for_nonprofit_descriptions.si(),
-                               find_communities_for_descriptions.si())
-    followers_chain = chain(find_similarity_scores_for_followers.si(),
-                            find_communities_for_followers.si())
+    # tweets_chain = chain(add_similarity_scores_for_nonprofit_tweets.si(),
+    #                      find_communities_for_tweets.si())
+    # descriptions_chain = chain(add_similarity_scores_for_nonprofit_descriptions.si(),
+    #                            find_communities_for_descriptions.si())
+    # followers_chain = chain(find_similarity_scores_for_followers.si(),
+    #                         find_communities_for_followers.si())
 
-    twitter_chain = chain(update_null_nonprofit_twitter_ids.si(),
-                          group(tweets_chain,
-                                followers_chain))
+    # twitter_chain = chain(update_null_nonprofit_twitter_ids.si(),
+    #                       group(tweets_chain,
+    #                             followers_chain))
 
-    return group(twitter_chain, descriptions_chain).apply_async()
+    # return group(twitter_chain, descriptions_chain).apply_async()
+    add_similarity_scores_for_nonprofit_tweets()
+    find_communities_for_tweets()
+
+    add_similarity_scores_for_nonprofit_descriptions()
+    find_communities_for_descriptions()
+
+    find_similarity_scores_for_followers()
+    find_communities_for_followers()
+
+    update_null_nonprofit_twitter_ids()
 
 
 @celery.task(name='tasks.add_guidestar_info_to_db')
