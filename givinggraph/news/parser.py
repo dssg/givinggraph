@@ -36,7 +36,7 @@ def get_company_mentions_in_text(text, company_name):
 
     excerpts = []
     # the below if statement is an optimization: 'in' is fast, and checking for the company name by itself is faster than matching on the whole excerpt.
-    if company_name.split()[0] in text and company_name_regex_cache[company_name].search(text) is not None:
+    if text is not None and company_name.split()[0] in text and company_name_regex_cache[company_name].search(text) is not None:
         excerpts = excerpt_regex_cache[company_name].findall(text)  # match on the whole excerpt
     return excerpts
 
