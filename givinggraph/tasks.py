@@ -342,7 +342,7 @@ def show_topics_for_tweets():
 
 
 if __name__ == '__main__':
-    with open('c:/collaborations.csv', 'rb') as collaborations_file:
+    with open('collaborations.csv', 'rb') as collaborations_file:
         reader = csv.reader(collaborations_file)
         next(reader, None)  # skip header row
         for row in reader:
