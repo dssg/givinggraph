@@ -63,10 +63,14 @@ def add_new_nonprofit(ein):
     logger.debug('Companies retrieved.')
 
     # add_news_articles_to_db_for_nonprofit returns a list of articles, which will get passed as the 2nd argument to add_nonprofit_company_news_article_connections
-    news_chain = chain(add_news_articles_to_db_for_nonprofit.si(nonprofit.nonprofits_id),
-                       add_nonprofit_company_news_article_connections.s(companies))
+    # NOTE: Commented out because of synchronization issue: articles passed to add_nonprofit_company_news_article_connections(...) are in the DB, but SQLAlchemy doesn't see them.
+    # news_chain = chain(add_news_articles_to_db_for_nonprofit.si(nonprofit.nonprofits_id),
+    #                    add_nonprofit_company_news_article_connections.s(companies))
+    article_ids = add_news_articles_to_db_for_nonprofit(nonprofit.nonprofits_id)
+    add_nonprofit_company_news_article_connections(article_ids, companies)
 
-    return group(twitter_chain, news_chain).apply_async()
+    #return group(twitter_chain, news_chain).apply_async()
+    return group(twitter_chain).apply_async()
 
 
 @celery.task(name='tasks.perform_aggregate_tasks')
@@ -268,7 +272,11 @@ def add_nonprofit_company_news_article_connections(article_ids, companies):
             print '***************************'
             print '***************************'
             time.sleep(180)
+        counter = 1
         for company in companies:
+            if counter % 100 == 0:
+                print 'Processing article {0} for company {1} of {2}...'.format(article_id, counter, len(companies))
+            counter += 1
             for mention in news_parser.get_company_mentions_in_text(article.text, company.name.encode('utf-8')):
                 if news_parser.contains_supportive_wording(mention):
                     article.companies.append(company)
