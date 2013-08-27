@@ -71,7 +71,7 @@ python -m givinggraph.tasks
 
 ## Contributing to the Project
 - Feel free to create an issue for any bugs you encounter.
-- <dssg-giving@googlegroups.com>
+- To get involved with this project, reach out to <dssg-giving@googlegroups.com>
 
 [Travis](https://travis-ci.org/dssg/givinggraph) is used for continuous testing. Most of the tests are [doctests](http://docs.python.org/2/library/doctest.html).
 
