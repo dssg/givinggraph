@@ -30,8 +30,6 @@ The following kinds of analyses are performed:
 * Community membership, based on tweet similarity.
 * Community membership, based on description similarity.
 
-## The Project
-
 ### Structured Information
 GivingGraph enables you to aggregate data from structured sources such as GuideStar and CharityNavigator (with appropriate API permissions). This step will provide information such as nonprofit name, financials, and categorization code.
 
@@ -48,8 +46,15 @@ Social information: For each nonprofit, GivingGraph attempts to identify their T
 ### Graph Analysis
 With these sources of information, we can then build a weighted graph connecting nonprofits, causes, companies, and people. Community detection algorithms can then be used to detect related nonprofits recommend partnerships.
 
+## Project Layout
+* [`/db`](db) contains SQL for creating the DB schema and various scripts for retrieving data from the DB.
+* [`/docs`](docs) contains presentation slides about the project.
+* [`/givinggraph`](givinggraph) contains the Python package for retrieving and analyzing nonprofit data.
+* [`/scripts`](scripts) contains R code for displaying nonprofit visualizations.
+* [`/tests`](tests) contains Python for checking for pep8 violations.
 
 ## Installation Guide
+GivingGraph has been tested with Python 2.7 and MySQL 5.5.31.
 
     git clone https://github.com/dssg/givinggraph.git
     cd givinggraph
