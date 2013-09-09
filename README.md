@@ -14,6 +14,8 @@ GivingGraph is an integration tool to help nonprofits understand their relations
 2. Which companies have partnerships with nonprofits in my sector?
 3. Which is my impact on social media and what are the characteristics of my followers?
 
+For more info, see the wiki page: http://github.com/dssg/givinggraph/wiki/Problem
+
 ## The Solution
 GivingGraph automates the retrieval of information about nonprofits and the analysis of that information.
 
@@ -68,6 +70,8 @@ Various API and database credentials are read from a configuration file. A sampl
 3. set an environment GGRAPH_CFG to point to the file (e.g., `export GGRAPH_CFG=~/.giving`)
 
 For the full experience, you'll need credentials for [GuideStar](http://www.guidestar.org/), [Charity Navigator](http://www.charitynavigator.org/), [Twitter](http://twitter.com). Also, you'll need to launch a MySQL instance and enter your host information in the config.
+
+For more info, see the wiki: https://github.com/dssg/givinggraph/wiki/API
 
 ### Celery Configuration
 
