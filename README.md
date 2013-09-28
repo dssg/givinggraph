@@ -6,57 +6,26 @@ This project is part of the 2013 [Data Science for Social Good](http://dssg.io) 
 
 
 ## The Problem: knowledge gaps in the nonprofit sector
-Every nonprofit has three critical activities to consider: fundraising, attracting volunteers/employees, and forming partnerships. Unfortunately, nonprofits aren't learning as much from each other about how to do these things as they could. The problem isn't a lack of information about what other organizations do. There's a ton out there, but it's messy -- scattered across the web, in charity databases, in news articles, in social media, in data sources structured and unstructured.
+Every nonprofit has three critical activities to consider: fundraising, attracting volunteers/employees, and forming partnerships. Unfortunately, nonprofits aren't learning as much from each other about how to do these things as they could. 
 
-GivingGraph is a data aggregation tool to help nonprofits understand their relationship to people, companies, and other nonprofits. The key questions we aim to help nonprofits answer:
+The problem isn't a lack of information about what other organizations do. There's a ton out there, but it's messy -- scattered across the web, in charity databases, in news articles, in social media, in data sources structured and unstructured.
 
-1. How do I relate to other charities operating in the same sector?
-2. Which companies have partnerships with nonprofits in my sector?
-3. What is my impact on social media, and what are the characteristics of my followers?
+If we brought all this info together, we could help nonprofits answer these key questions:
 
-For more info, see the wiki page: http://github.com/dssg/givinggraph/wiki/Problem
+- How do I relate to other charities operating in the same sector?
+- Which companies have partnerships with nonprofits in my sector?
+- What is my impact on social media, and what are the characteristics of my followers?
+
+[Read more about the knowledge gap problem in the wiki](http://github.com/dssg/givinggraph/wiki/Problem)
 
 ## The Solution: data gathering, text mining, social network analysis, and APIs
-GivingGraph 1. gathers disparate information about nonprofits from structured, unstructured, and social sources, 2. constructs a network of nonprofits/companies/people from this information, and 3. makes the resulting "giving graph" available to everyone through an **API**. 
+To help nonprofits answer these questions, we've built GivingGraph, a data aggregation and analysis tool that helps these organizations understand their relationship to people, companies, and other nonprofits.
+
+First, the tool gathers and merges disparate information about nonprofits from structured, unstructured, and social sources. Then, it constructs a network of nonprofits/companies/people from this information using text mining, and analyzes this graph using social network analysis. Finally, it makes this "giving graph" and analysis available to everyone through an **API**. 
 
 Apps can then be built on top of this API to help nonprofits answer their burning questions about their nonprofit peers, potential corporate partners, and followers. 
 
-### Structured data - basic info on nonprofits
-GivingGraph enables you to aggregate basic information about a nonprofit from structured databases such as GuideStar and CharityNavigator, with appropriate API permissions and the organization's nonprofit ID (EIN number).
-
-* Nonprofit's name, location, description, financials, and issue category (NTEE code).
-
-### Unstructured data - nonprofits, and companies
-GivingGraph fetches unstructured, natural language data from the web in order to link nonprofits to companies:
-
-- **News articles**: GivingGraph uses web search APIs like Yahoo News to gather news stories that mention companies and the nonprofits and causes they support. Filtering is performed to reduce false matches.
-- **Webpages**: the Guidestar and CharityNavigator databases often list a nonprofit's homepage. Givinggraph can crawl these webpages and automatically extract company names that pop up - possibly indicating a relationship - using a combination of lists of company names.
-
-### Social data - nonprofits and supporters
-GivingGraph can also fetch a nonprofit's twitter data:
-
-- the organization's official **twitter account**, by searching Yahoo.
-- the nonprofit's **twitter followers**, from the Twitter API.
-- the nonprofit's **tweets**, from the same place.
-
-### Graph building - linking everything together
-With all these sources of information in hand, we use **natural language processing** techniques to build a **weighted graph** that connects nonprofits, companies, and people (twitter followers). 
-
-- Similarity relationships between nonprofits, based on their tweets.
-- Similarity relationships between nonprofits, based on their webpages.
-- Follower relationships between twitter users and nonprofits.
-- Relationships between companies and nonprofits, based on news article mentions.
-
-### Graph analysis - understanding supports, recommending partnerships, finding nonprofit communities, understanding connectedness
-We then use **social network analysis**, including **community detection algorithms**, to recommend company partnerships, discover communities of similar nonprofits, and understand the network structure of those communities.
-
-- Basic twitter account summary stats, including average retweets and favorites. (this part of the analysis is very undeveloped).
-- Companies the nonprofit could partner with, based on firms mentioned in news articles with similar organizations
-- Social network analysis of individual nonprofits: how connected they are to other organizations, etc.
-- Social network analysis of nonprofit verticals: how well connected environmental organizations are, etc.
-
-# Giving graph API - publishing the graph and analysis
-In order for the nonprofit-company graph we've constructed and the analysis we're doing on top of it to be useful, we make them available through a simple [API](https://github.com/dssg/givinggraph/wiki/API). Apps can be built on top of this API that help nonprofits answer key questions, thus alleviating knowledge gaps in the sector.
+[Read up on how we're doing this in the wiki](http://github.com/dssg/givinggraph/wiki/Methodology)
 
 ## Project Layout
 * [`/givinggraph`](givinggraph) contains a Python package for retrieving and analyzing nonprofit data. It's the heart of the project.
