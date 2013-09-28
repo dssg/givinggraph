@@ -5,54 +5,65 @@ Giving Graph is a proof-of-concept project that **assembles information** about 
 This project is part of the 2013 [Data Science for Social Good](http://dssg.io) fellowship, in partnership with the [Case Foundation](http://casefoundation.org). The Giving Graph concept [was introduced by the Case Foundation](http://casefoundation.org/blog/how-new-type-social-graph-could-change-philanthropy) in early 2013.
 
 
-## The Problem
-Every nonprofit has three critical activities to consider: fundraising, attracting volunteers/employees, and forming partnerships. Unfortunately, nonprofits aren't learning as much from each other as they could. The problem isn't a lack of information. The problem is that there's too much and it's messy -- scattered across the web, in charity databases, in news articles, in social media, in sources organized and unorganized.
+## The Problem: knowledge gaps in the nonprofit sector
+Every nonprofit has three critical activities to consider: fundraising, attracting volunteers/employees, and forming partnerships. Unfortunately, nonprofits aren't learning as much from each other about how to do these things as they could. The problem isn't a lack of information about what other organizations do. There's a ton out there, but it's messy -- scattered across the web, in charity databases, in news articles, in social media, in data sources structured and unstructured.
 
-GivingGraph is an integration tool to help nonprofits understand their relationship to people, causes, companies, and other nonprofits. Some questions we aim to help nonprofits answer include:
+GivingGraph is a data aggregation tool to help nonprofits understand their relationship to people, companies, and other nonprofits. The key questions we aim to help nonprofits answer:
 
 1. How do I relate to other charities operating in the same sector?
 2. Which companies have partnerships with nonprofits in my sector?
-3. Which is my impact on social media and what are the characteristics of my followers?
+3. What is my impact on social media, and what are the characteristics of my followers?
 
 For more info, see the wiki page: http://github.com/dssg/givinggraph/wiki/Problem
 
-## The Solution
-GivingGraph automates the retrieval of information about nonprofits and the analysis of that information.
+## The Solution: data gathering, text mining, social network analysis, and APIs
+GivingGraph 1. gathers disparate information about nonprofits from structured, unstructured, and social sources, 2. constructs a network of nonprofits/companies/people from this information, and 3. makes the resulting "giving graph" available to everyone through an **API**. 
 
-For a given nonprofit, the following kinds of data are collected:
-* based on an EIN, basic nonprofit information is retrieved via the GuideStar.org API (nonprofit name, location, description, etc).
-* news articles mentioning a nonprofit are retrieved by searching Yahoo News.
-* the official Twitter account of a nonprofit is retrieved by searching Yahoo.
-* the nonprofit's Twitter followers are retrieved.
-* the nonprofit's tweets are retrieved.
+Apps can then be built on top of this API to help nonprofits answer their burning questions about their nonprofit peers, potential corporate partners, and followers. 
 
-The following kinds of analyses are performed:
-* Similarity between nonprofits, based on tweets.
-* Similarity between nonprofits, based on descriptions.
-* Community membership, based on tweet similarity.
-* Community membership, based on description similarity.
+### Structured data - basic info on nonprofits
+GivingGraph enables you to aggregate basic information about a nonprofit from structured databases such as GuideStar and CharityNavigator, with appropriate API permissions and the organization's nonprofit ID (EIN number).
 
-### Structured Information
-GivingGraph enables you to aggregate data from structured sources such as GuideStar and CharityNavigator (with appropriate API permissions). This step will provide information such as nonprofit name, financials, and categorization code.
+* Nonprofit's name, location, description, financials, and issue category (NTEE code).
 
-### Unstructured Information
-GivingGraph collects information connecting nonprofits and companies from the following sources:
+### Unstructured data - nonprofits, and companies
+GivingGraph fetches unstructured, natural language data from the web in order to link nonprofits to companies:
 
-- **News stories**: GivingGraph uses web search APIs to gather news stories containing mentions of nonprofits, companies, and causes. Filtering is performed to reduce false matches.
-- **Webpages**: The data from Guidestar and CharityNavigator often contain the web addresses of each nonprofit. The tool can crawl these pages and extract names of companies, using a combination of lists of company names.
+- **News articles**: GivingGraph uses web search APIs like Yahoo News to gather news stories that mention companies and the nonprofits and causes they support. Filtering is performed to reduce false matches.
+- **Webpages**: the Guidestar and CharityNavigator databases often list a nonprofit's homepage. Givinggraph can crawl these webpages and automatically extract company names that pop up - possibly indicating a relationship - using a combination of lists of company names.
 
-This step provides information such as the causes and nonprofits a company supports.
+### Social data - nonprofits and supporters
+GivingGraph can also fetch a nonprofit's twitter data:
 
-Social information: For each nonprofit, GivingGraph attempts to identify their Twitter account(s) and analyze their follower list to derive information such as number of followers.
+- the organization's official **twitter account**, by searching Yahoo.
+- the nonprofit's **twitter followers**, from the Twitter API.
+- the nonprofit's **tweets**, from the same place.
 
-### Graph Analysis
-With these sources of information, we can then build a weighted graph connecting nonprofits, causes, companies, and people. Community detection algorithms can then be used to detect related nonprofits recommend partnerships.
+### Graph building - linking everything together
+With all these sources of information in hand, we use **natural language processing** techniques to build a **weighted graph** that connects nonprofits, companies, and people (twitter followers). 
+
+- Similarity relationships between nonprofits, based on their tweets.
+- Similarity relationships between nonprofits, based on their webpages.
+- Follower relationships between twitter users and nonprofits.
+- Relationships between companies and nonprofits, based on news article mentions.
+
+### Graph analysis - understanding supports, recommending partnerships, finding nonprofit communities, understanding connectedness
+We then use **social network analysis**, including **community detection algorithms**, to recommend company partnerships, discover communities of similar nonprofits, and understand the network structure of those communities.
+
+- Basic twitter account summary stats, including average retweets and favorites. (this part of the analysis is very undeveloped).
+- Companies the nonprofit could partner with, based on firms mentioned in news articles with similar organizations
+- Social network analysis of individual nonprofits: how connected they are to other organizations, etc.
+- Social network analysis of nonprofit verticals: how well connected environmental organizations are, etc.
+
+# Giving graph API - publishing the graph and analysis
+In order for the nonprofit-company graph we've constructed and the analysis we're doing on top of it to be useful, we make them available through a simple [API](https://github.com/dssg/givinggraph/wiki/API). Apps can be built on top of this API that help nonprofits answer key questions, thus alleviating knowledge gaps in the sector.
 
 ## Project Layout
-* [`/db`](db) contains SQL for creating the DB schema and various scripts for retrieving data from the DB.
+* [`/givinggraph`](givinggraph) contains a Python package for retrieving and analyzing nonprofit data. It's the heart of the project.
+* [`/db`](db) contains SQL scripts that create a database to put nonprofit data in, and various scripts for retrieving data from the DB.
+* [`/scripts`](scripts) contains R code for visualizing this nonprofit data.
+
 * [`/docs`](docs) contains presentation slides about the project.
-* [`/givinggraph`](givinggraph) contains the Python package for retrieving and analyzing nonprofit data.
-* [`/scripts`](scripts) contains R code for displaying nonprofit visualizations.
 * [`/tests`](tests) contains Python for checking for pep8 violations.
 
 ## Installation Guide
