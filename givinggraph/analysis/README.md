@@ -1,0 +1,8 @@
+- `community.py`: Third party community detection module written by Thomas Aynaud.
+- `company_clause_classifier.py`: Predicts if a company supports a certain cause, based on data from milliondollarlist.org.
+- `forceatlas.py`: Contains helper code for visualizing a graph.
+- `graph_viz.py`: Visualizes a graph.
+- `lda.py`: Contains code for performing Latent Dirichlet Allocation, a topic modeling technique.
+- `network_analysis.py`: Computes various metrics about graphs.
+- `sector.py`: Generates various graph metrics for nonprofits with a given NTEE code.
+- `similarity.py`: Uses the gensim library to calculate the similarity of different texts.
