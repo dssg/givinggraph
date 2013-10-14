@@ -8,3 +8,6 @@
 - `twitter/`: Fetch and parse Twitter data via the Twitter API.
 - `util/`: Utilities.
 - `yahoo/`: Search Yahoo.
+
+
+Our Methodology wiki page may be helpful: https://github.com/dssg/givinggraph/wiki/Methodology
