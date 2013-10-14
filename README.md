@@ -18,7 +18,7 @@ If we brought all this info together, we could help nonprofits answer these key 
 
 [Read more about the knowledge gap problem in the wiki](http://github.com/dssg/givinggraph/wiki/Problem)
 
-## The Solution: data gathering, text mining, social network analysis, and APIs
+## The Solution: data gathering, topic modeling (NLP), community detection (network analysis), and APIs
 To help nonprofits answer these questions, we've built GivingGraph, a data aggregation and analysis tool that helps these organizations understand their relationship to people, companies, and other nonprofits.
 
 First, the tool gathers and merges disparate information about nonprofits from structured, unstructured, and social sources. Then, it constructs a network of nonprofits/companies/people from this information using text mining, and analyzes this graph using social network analysis. Finally, it makes this "giving graph" and analysis available to everyone through an **API**. 
