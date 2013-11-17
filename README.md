@@ -1,4 +1,4 @@
-GivingGraph
+Giving Graph
 ========
 [<img src="http://dssg.io/img/partners/case.jpg" width="400" align="right">](http://casefoundation.org)
 
