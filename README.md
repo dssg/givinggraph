@@ -71,6 +71,10 @@ celery -A givinggraph.tasks worker --loglevel=INFO
 python -m givinggraph.tasks
 ```
 
+
+## Team
+![Team](https://raw.github.com/dssg/dssg.github.io/761993c24ea2991170ef64048115cb805f5f13fb/img/people/teams/givinggraph.png)
+
 ## Contributing to the Project
 - Feel free to create an issue for any bugs you encounter.
 - To get involved with this project, reach out to <dssg-giving@googlegroups.com>
