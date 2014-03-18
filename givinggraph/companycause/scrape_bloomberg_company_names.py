@@ -42,10 +42,10 @@ def main():
             getPageData(soup)
             # print 'Finished 1st page of ' + p
 
-            # Collect data on remaining pages of $p
-            for r in rem_pages:
-                getPageData(bs(urllib2.urlopen('http://www.bloomberg.com' + r)))
-                # print 'Finished ' + r.replace('/markets/companies/a-z/b/', '') + ' of page ' + p + '. Collected ' + str(len(collector)) + ' datapoints.'
+        # Collect data on remaining pages of $p
+        for r in rem_pages:
+            getPageData(bs(urllib2.urlopen('http://www.bloomberg.com' + r)))
+            # print 'Finished ' + r.replace('/markets/companies/a-z/b/', '') + ' of page ' + p + '. Collected ' + str(len(collector)) + ' datapoints.'
 
 
 def getPageData(soup):
@@ -111,14 +111,14 @@ def myCSVwriter(filname, row, flag):
     # Most likely, you'll be writing the header file with flag=1
     if flag == 1:
         with open(filname, 'wb') as csvfhandler:
-            csv.register_dialect('excel', delimiter=', ', skipinitialspace=True)
+            csv.register_dialect('excel', delimiter=',', skipinitialspace=True)
             writer = csv.writer(csvfhandler, dialect='excel')
             writer.writerow(row)
 
     # We call this writer when appending to existing file
     if flag == 0:
         with open(filname, 'ab') as csvfhandler:
-            csv.register_dialect('excel', delimiter=', ', skipinitialspace=True)
+            csv.register_dialect('excel', delimiter=',', skipinitialspace=True)
             writer = csv.writer(csvfhandler, dialect='excel')
             writer.writerow(row)
 
